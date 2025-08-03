@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
 import heroImage from "@/assets/hero-models.jpg";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -22,9 +23,11 @@ const Hero = () => {
               </p>
             </div>
 
-            <Button variant="hero" size="xl" className="w-full sm:w-auto">
-              Shop Now
-            </Button>
+            <Link to="/shop">
+              <Button variant="hero" size="xl" className="w-full sm:w-auto">
+                Shop Now
+              </Button>
+            </Link>
 
             {/* Statistics */}
             <div className="grid grid-cols-3 gap-8 pt-8 border-t border-border">

@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, ShoppingCart, User, Menu } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -14,9 +15,9 @@ const Header = () => {
 
           {/* Navigation - Hidden on mobile */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#" className="text-foreground hover:text-primary transition-colors font-medium">
+            <Link to="/shop" className="text-foreground hover:text-primary transition-colors font-medium">
               Shop
-            </a>
+            </Link>
             <a href="#" className="text-foreground hover:text-primary transition-colors font-medium">
               On Sale
             </a>

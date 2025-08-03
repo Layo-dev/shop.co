@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import CategoryPage from "./pages/CategoryPage";
+import ShopPage from "./pages/ShopPage";
 
 const queryClient = new QueryClient();
 
@@ -17,6 +18,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/shop" element={<ShopPage />} />
           <Route path="/casual" element={<CategoryPage category="casual" />} />
           <Route path="/formal" element={<CategoryPage category="formal" />} />
           <Route path="/party" element={<CategoryPage category="party" />} />
