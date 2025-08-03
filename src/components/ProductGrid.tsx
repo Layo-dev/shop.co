@@ -120,6 +120,7 @@ const ProductGrid = ({ products, category, sortBy, onSortChange, totalProducts }
         {currentProducts.map((product) => (
           <ProductCard
             key={product.id}
+            id={product.id}
             image={product.image}
             title={product.title}
             price={product.price}

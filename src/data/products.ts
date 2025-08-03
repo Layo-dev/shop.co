@@ -2,6 +2,7 @@ export interface Product {
   id: number;
   title: string;
   image: string;
+  images?: string[];
   price: number;
   originalPrice?: number;
   rating: number;
@@ -10,9 +11,24 @@ export interface Product {
   category: string;
   subcategory: string;
   color: string;
+  colors?: { name: string; value: string }[];
   sizes: string[];
   style: string;
   createdAt: string;
+  description?: string;
+  material?: string;
+  care?: string[];
+  inStock?: boolean;
+}
+
+export interface Review {
+  id: number;
+  productId: number;
+  userName: string;
+  rating: number;
+  comment: string;
+  date: string;
+  verified: boolean;
 }
 
 export const products: Product[] = [

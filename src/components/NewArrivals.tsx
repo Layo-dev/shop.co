@@ -6,12 +6,14 @@ import productShirt from "@/assets/product-shirt.jpg";
 import productOrange from "@/assets/product-orange.jpg";
 const NewArrivals = () => {
   const products = [{
+    id: 1,
     image: productTshirt,
     title: "T-shirt with Tape Details",
     price: 120,
     rating: 4.5,
     reviews: 5
   }, {
+    id: 4,
     image: productJeans,
     title: "Skinny Fit Jeans",
     price: 240,
@@ -20,12 +22,14 @@ const NewArrivals = () => {
     reviews: 14,
     discount: 20
   }, {
+    id: 5,
     image: productShirt,
     title: "Checkered Shirt",
     price: 180,
     rating: 4.5,
     reviews: 12
   }, {
+    id: 6,
     image: productOrange,
     title: "Sleeve Striped T-shirt",
     price: 130,

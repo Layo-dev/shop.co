@@ -1,6 +1,8 @@
 import { Star } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface ProductCardProps {
+  id?: number;
   image: string;
   title: string;
   price: number;
@@ -11,6 +13,7 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ 
+  id,
   image, 
   title, 
   price, 
@@ -19,7 +22,7 @@ const ProductCard = ({
   reviews, 
   discount 
 }: ProductCardProps) => {
-  return (
+  const content = (
     <div className="glass-card rounded-2xl p-4 group cursor-pointer">
       {/* Product Image */}
       <div className="relative overflow-hidden rounded-xl mb-4 bg-muted">
@@ -70,6 +73,12 @@ const ProductCard = ({
       </div>
     </div>
   );
+
+  if (id) {
+    return <Link to={`/product/${id}`}>{content}</Link>;
+  }
+
+  return content;
 };
 
 export default ProductCard;
