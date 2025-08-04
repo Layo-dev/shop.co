@@ -28,7 +28,7 @@ const ShopPage = () => {
       title: "PREMIUM BRANDS", 
       subtitle: "Versace, Gucci, Prada, Calvin Klein, Zara",
       image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=500&h=600&fit=crop",
-      link: "/casual",
+      link: "/brands",
       bgGradient: "from-amber-600/20 to-orange-800/20"
     }
   ];
