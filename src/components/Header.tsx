@@ -24,9 +24,9 @@ const Header = () => {
             <a href="#" className="text-foreground hover:text-primary transition-colors font-medium">
               New Arrivals
             </a>
-            <a href="#" className="text-foreground hover:text-primary transition-colors font-medium">
+            <Link to="/brands" className="text-foreground hover:text-primary transition-colors font-medium">
               Brands
-            </a>
+            </Link>
           </nav>
 
           {/* Search bar */}
