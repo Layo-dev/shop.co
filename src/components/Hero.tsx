@@ -61,6 +61,13 @@ const Hero = () => {
             <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-primary rounded-full opacity-10"></div>
             <Star className="absolute top-8 right-8 w-6 h-6 text-accent fill-current" />
             <Star className="absolute bottom-16 left-8 w-4 h-4 text-primary fill-current" />
+            
+            {/* Diamond star icon */}
+            <img
+              src="/lovable-uploads/5affe512-2536-4ee7-a33e-2d932fae87c0.png"
+              alt="Diamond star decoration"
+              className="absolute top-4 right-4 w-8 h-8 object-contain"
+            />
           </div>
         </div>
       </div>
