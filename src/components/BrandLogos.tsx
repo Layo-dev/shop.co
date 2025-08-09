@@ -1,7 +1,7 @@
 const BrandLogos = () => {
   const brands = [{
     name: "VERSACE",
-    style: "font-serif font-bold text-xl"
+    style: "font-luxury font-bold text-xl"
   }, {
     name: "ZARA",
     style: "font-bold text-xl tracking-wider"
