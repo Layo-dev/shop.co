@@ -1,9 +1,20 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { Search, ShoppingCart, User, Menu } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useCart } from "@/contexts/CartContext";
+import CartSidebar from "@/components/CartSidebar";
+import SearchModal from "@/components/SearchModal";
+import AccountSidebar from "@/components/AccountSidebar";
 
 const Header = () => {
+  const { state } = useCart();
+  const [cartOpen, setCartOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
+
   return (
     <header className="w-full bg-background/95 backdrop-blur-md border-b border-border sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -38,7 +49,9 @@ const Header = () => {
               <Input
                 type="search"
                 placeholder="Search for products..."
-                className="pl-10 glass-card border-none"
+                className="pl-10 glass-card border-none cursor-pointer"
+                onClick={() => setSearchOpen(true)}
+                readOnly
               />
             </div>
           </div>
@@ -46,15 +59,37 @@ const Header = () => {
           {/* Right side actions */}
           <div className="flex items-center space-x-4">
             {/* Search icon for mobile */}
-            <Button variant="ghost" size="icon" className="lg:hidden">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="lg:hidden"
+              onClick={() => setSearchOpen(true)}
+            >
               <Search className="w-5 h-5" />
             </Button>
             
-            <Button variant="ghost" size="icon">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="relative"
+              onClick={() => setCartOpen(true)}
+            >
               <ShoppingCart className="w-5 h-5" />
+              {state.totalItems > 0 && (
+                <Badge 
+                  variant="destructive" 
+                  className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs"
+                >
+                  {state.totalItems > 99 ? '99+' : state.totalItems}
+                </Badge>
+              )}
             </Button>
             
-            <Button variant="ghost" size="icon">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => setAccountOpen(true)}
+            >
               <User className="w-5 h-5" />
             </Button>
 
@@ -65,6 +100,11 @@ const Header = () => {
           </div>
         </div>
       </div>
+
+      {/* Modals and Sidebars */}
+      <CartSidebar open={cartOpen} onOpenChange={setCartOpen} />
+      <SearchModal open={searchOpen} onOpenChange={setSearchOpen} />
+      <AccountSidebar open={accountOpen} onOpenChange={setAccountOpen} />
     </header>
   );
 };

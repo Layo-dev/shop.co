@@ -5,18 +5,15 @@ import { Badge } from "@/components/ui/badge";
 import ColorSelector from "@/components/ColorSelector";
 import SizeSelector from "@/components/SizeSelector";
 import QuantitySelector from "@/components/QuantitySelector";
+import { useCart } from "@/contexts/CartContext";
+import { toast } from "@/hooks/use-toast";
+import { Product } from "@/data/products";
 
 interface ProductInfoProps {
-  product: {
-    id: number;
-    title: string;
-    price: number;
+  product: Product & {
     originalPrice?: number;
-    rating: number;
-    reviews: number;
     discount?: number;
     colors?: { name: string; value: string }[];
-    sizes: string[];
     description?: string;
     material?: string;
     care?: string[];
@@ -25,18 +22,33 @@ interface ProductInfoProps {
 }
 
 const ProductInfo = ({ product }: ProductInfoProps) => {
+  const { addItem } = useCart();
   const [selectedColor, setSelectedColor] = useState(product.colors?.[0]);
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
 
   const handleAddToCart = () => {
-    // Add to cart logic here
-    console.log("Added to cart:", { 
-      productId: product.id, 
-      color: selectedColor, 
-      size: selectedSize, 
-      quantity 
+    if (!selectedSize) {
+      toast({
+        title: "Please select a size",
+        description: "You need to choose a size before adding to cart.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    addItem({
+      productId: product.id,
+      product: product,
+      selectedColor,
+      selectedSize,
+      quantity,
+    });
+
+    toast({
+      title: "Added to cart!",
+      description: `${product.title} has been added to your cart.`,
     });
   };
 
