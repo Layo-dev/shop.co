@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Search, Filter, SortAsc } from "lucide-react";
 import { brands, brandCategories, getBrandsByCategory } from "@/data/brands";
 import BrandCard from "./BrandCard";
+import AnimatedSection from "./AnimatedSection";
 
 const BrandDirectory = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -103,8 +104,15 @@ const BrandDirectory = () => {
           
           {/* Brand Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredAndSortedBrands.map((brand) => (
-              <BrandCard key={brand.id} brand={brand} />
+            {filteredAndSortedBrands.map((brand, index) => (
+              <AnimatedSection 
+                key={brand.id} 
+                animation="fade-in" 
+                delay={index * 100}
+                className="hover-scale"
+              >
+                <BrandCard brand={brand} />
+              </AnimatedSection>
             ))}
           </div>
           
