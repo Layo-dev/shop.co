@@ -51,27 +51,45 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
+    try {
+      // Clean up any existing session first
+      await supabase.auth.signOut({ scope: 'global' });
+    } catch (err) {
+      // Ignore cleanup errors
+    }
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
       password,
     });
+
+    console.log('Sign in response:', { data, error });
     return { error };
   };
 
   const signUp = async (email: string, password: string, firstName?: string, lastName?: string) => {
+    try {
+      // Clean up any existing session first
+      await supabase.auth.signOut({ scope: 'global' });
+    } catch (err) {
+      // Ignore cleanup errors
+    }
+
     const redirectUrl = `${window.location.origin}/`;
     
-    const { error } = await supabase.auth.signUp({
-      email,
+    const { data, error } = await supabase.auth.signUp({
+      email: email.trim(),
       password,
       options: {
         emailRedirectTo: redirectUrl,
         data: {
-          first_name: firstName,
-          last_name: lastName,
+          first_name: firstName?.trim() || '',
+          last_name: lastName?.trim() || '',
         }
       }
     });
+
+    console.log('Sign up response:', { data, error });
     return { error };
   };
 

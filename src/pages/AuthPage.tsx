@@ -13,12 +13,12 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 
 const signInSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
+  email: z.string().min(1, 'Email is required').email('Please enter a valid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
 const signUpSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
+  email: z.string().min(1, 'Email is required').email('Please enter a valid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
@@ -61,13 +61,27 @@ const AuthPage = () => {
 
   const onSignIn = async (data: SignInFormData) => {
     setIsLoading(true);
+    console.log('Attempting sign in with:', { email: data.email });
+    
     try {
-      const { error } = await signIn(data.email, data.password);
+      const { error } = await signIn(data.email.trim(), data.password);
       
       if (error) {
+        console.error('Sign in error:', error);
+        let errorMessage = error.message;
+        
+        // Handle specific error types
+        if (error.message.includes('Invalid login credentials')) {
+          errorMessage = 'Invalid email or password. Please check your credentials and try again.';
+        } else if (error.message.includes('Email not confirmed')) {
+          errorMessage = 'Please check your email and click the confirmation link before signing in.';
+        } else if (error.message.includes('Too many requests')) {
+          errorMessage = 'Too many attempts. Please wait a moment before trying again.';
+        }
+        
         toast({
           title: 'Sign in failed',
-          description: error.message,
+          description: errorMessage,
           variant: 'destructive',
         });
       } else {
@@ -77,10 +91,11 @@ const AuthPage = () => {
         });
         navigate('/');
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Unexpected sign in error:', error);
       toast({
         title: 'An error occurred',
-        description: 'Please try again later.',
+        description: 'Please check your internet connection and try again.',
         variant: 'destructive',
       });
     } finally {
@@ -90,26 +105,54 @@ const AuthPage = () => {
 
   const onSignUp = async (data: SignUpFormData) => {
     setIsLoading(true);
+    console.log('Attempting sign up with:', { 
+      email: data.email, 
+      firstName: data.firstName, 
+      lastName: data.lastName 
+    });
+    
     try {
-      const { error } = await signUp(data.email, data.password, data.firstName, data.lastName);
+      const { error } = await signUp(
+        data.email.trim(), 
+        data.password, 
+        data.firstName.trim(), 
+        data.lastName.trim()
+      );
       
       if (error) {
+        console.error('Sign up error:', error);
+        let errorMessage = error.message;
+        
+        // Handle specific error types
+        if (error.message.includes('User already registered')) {
+          errorMessage = 'An account with this email already exists. Please sign in instead.';
+        } else if (error.message.includes('Password should be at least')) {
+          errorMessage = 'Password must be at least 6 characters long.';
+        } else if (error.message.includes('Invalid email')) {
+          errorMessage = 'Please enter a valid email address.';
+        } else if (error.message.includes('Signup requires a valid password')) {
+          errorMessage = 'Please enter a valid password.';
+        }
+        
         toast({
           title: 'Sign up failed',
-          description: error.message,
+          description: errorMessage,
           variant: 'destructive',
         });
       } else {
         toast({
-          title: 'Account created!',
-          description: 'Please check your email for verification instructions.',
+          title: 'Account created successfully!',
+          description: 'Welcome to SHOP.CO! You can now sign in to your account.',
         });
+        // Reset form and switch to sign in
+        signUpForm.reset();
         setIsSignUp(false);
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Unexpected sign up error:', error);
       toast({
         title: 'An error occurred',
-        description: 'Please try again later.',
+        description: 'Please check your internet connection and try again.',
         variant: 'destructive',
       });
     } finally {
