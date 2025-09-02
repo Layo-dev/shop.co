@@ -105,10 +105,11 @@ const AuthPage = () => {
 
   const onSignUp = async (data: SignUpFormData) => {
     setIsLoading(true);
-    console.log('Attempting sign up with:', { 
-      email: data.email, 
-      firstName: data.firstName, 
-      lastName: data.lastName 
+    console.log('Sign up form data received:', data);
+    console.log('Form validation state:', {
+      isValid: signUpForm.formState.isValid,
+      errors: signUpForm.formState.errors,
+      values: signUpForm.getValues()
     });
     
     try {
@@ -355,7 +356,24 @@ const AuthPage = () => {
             <div className="text-center">
               <Button
                 variant="ghost"
-                onClick={() => setIsSignUp(!isSignUp)}
+                onClick={() => {
+                  console.log('Switching modes. Current mode:', isSignUp ? 'signup' : 'signin');
+                  // Reset both forms and clear errors when switching modes
+                  signInForm.reset({
+                    email: '',
+                    password: '',
+                  });
+                  signUpForm.reset({
+                    email: '',
+                    password: '',
+                    firstName: '',
+                    lastName: '',
+                  });
+                  signInForm.clearErrors();
+                  signUpForm.clearErrors();
+                  setIsSignUp(!isSignUp);
+                  console.log('Switched to mode:', !isSignUp ? 'signup' : 'signin');
+                }}
                 className="text-sm"
                 disabled={isLoading}
               >
