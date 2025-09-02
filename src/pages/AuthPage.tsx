@@ -47,6 +47,7 @@ const AuthPage = () => {
       email: '',
       password: '',
     },
+    mode: 'onChange',
   });
 
   const signUpForm = useForm<SignUpFormData>({
@@ -57,17 +58,16 @@ const AuthPage = () => {
       firstName: '',
       lastName: '',
     },
+    mode: 'onChange',
   });
 
   const onSignIn = async (data: SignInFormData) => {
     setIsLoading(true);
-    console.log('Attempting sign in with:', { email: data.email });
     
     try {
       const { error } = await signIn(data.email.trim(), data.password);
       
       if (error) {
-        console.error('Sign in error:', error);
         let errorMessage = error.message;
         
         // Handle specific error types
@@ -89,10 +89,10 @@ const AuthPage = () => {
           title: 'Welcome back!',
           description: 'You have been signed in successfully.',
         });
+        signInForm.reset();
         navigate('/');
       }
     } catch (error: any) {
-      console.error('Unexpected sign in error:', error);
       toast({
         title: 'An error occurred',
         description: 'Please check your internet connection and try again.',
@@ -105,12 +105,6 @@ const AuthPage = () => {
 
   const onSignUp = async (data: SignUpFormData) => {
     setIsLoading(true);
-    console.log('Sign up form data received:', data);
-    console.log('Form validation state:', {
-      isValid: signUpForm.formState.isValid,
-      errors: signUpForm.formState.errors,
-      values: signUpForm.getValues()
-    });
     
     try {
       const { error } = await signUp(
@@ -121,7 +115,6 @@ const AuthPage = () => {
       );
       
       if (error) {
-        console.error('Sign up error:', error);
         let errorMessage = error.message;
         
         // Handle specific error types
@@ -145,12 +138,10 @@ const AuthPage = () => {
           title: 'Account created successfully!',
           description: 'Welcome to SHOP.CO! You can now sign in to your account.',
         });
-        // Reset form and switch to sign in
         signUpForm.reset();
         setIsSignUp(false);
       }
     } catch (error: any) {
-      console.error('Unexpected sign up error:', error);
       toast({
         title: 'An error occurred',
         description: 'Please check your internet connection and try again.',
@@ -356,24 +347,7 @@ const AuthPage = () => {
             <div className="text-center">
               <Button
                 variant="ghost"
-                onClick={() => {
-                  console.log('Switching modes. Current mode:', isSignUp ? 'signup' : 'signin');
-                  // Reset both forms and clear errors when switching modes
-                  signInForm.reset({
-                    email: '',
-                    password: '',
-                  });
-                  signUpForm.reset({
-                    email: '',
-                    password: '',
-                    firstName: '',
-                    lastName: '',
-                  });
-                  signInForm.clearErrors();
-                  signUpForm.clearErrors();
-                  setIsSignUp(!isSignUp);
-                  console.log('Switched to mode:', !isSignUp ? 'signup' : 'signin');
-                }}
+                onClick={() => setIsSignUp(!isSignUp)}
                 className="text-sm"
                 disabled={isLoading}
               >
