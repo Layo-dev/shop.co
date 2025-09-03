@@ -21,7 +21,7 @@ const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <Link to="/" className="transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/20 rounded-md" aria-label="Go to homepage">
+            <Link to="/" className="transition-transform hover:scale-105 focus:outline-none" aria-label="Go to homepage">
               <h1 className="text-2xl font-bold text-gradient cursor-pointer">SHOP.CO</h1>
             </Link>
           </div>
