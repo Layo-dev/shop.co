@@ -47,7 +47,7 @@ const AuthPage = () => {
       email: '',
       password: '',
     },
-    mode: 'onChange',
+    mode: 'onSubmit',
   });
 
   const signUpForm = useForm<SignUpFormData>({
@@ -58,8 +58,16 @@ const AuthPage = () => {
       firstName: '',
       lastName: '',
     },
-    mode: 'onChange',
+    mode: 'onSubmit',
   });
+
+  // Clear forms when switching modes
+  useEffect(() => {
+    signInForm.reset();
+    signUpForm.reset();
+    signInForm.clearErrors();
+    signUpForm.clearErrors();
+  }, [isSignUp]);
 
   const onSignIn = async (data: SignInFormData) => {
     setIsLoading(true);
