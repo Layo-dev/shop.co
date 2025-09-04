@@ -2,10 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
 import heroImage from "@/assets/hero-models.jpg";
 import { Link } from "react-router-dom";
-
 const Hero = () => {
-  return (
-    <section className="hero-gradient py-20 px-4 sm:px-6 lg:px-8">
+  return <section className="hero-gradient py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left content */}
@@ -24,7 +22,7 @@ const Hero = () => {
             </div>
 
             <Link to="/shop">
-              <Button variant="hero" size="xl" className="w-full sm:w-auto">
+              <Button variant="hero" size="xl" className="w-full sm:w-auto my-[14px]">
                 Shop Now
               </Button>
             </Link>
@@ -49,11 +47,7 @@ const Hero = () => {
           {/* Right content - Hero image */}
           <div className="relative">
             <div className="glass-card rounded-3xl p-2 overflow-hidden">
-              <img
-                src={heroImage}
-                alt="Fashion models wearing trendy clothes"
-                className="w-full h-auto rounded-2xl object-cover"
-              />
+              <img src={heroImage} alt="Fashion models wearing trendy clothes" className="w-full h-auto rounded-2xl object-cover" />
             </div>
             
             {/* Floating decorative elements */}
@@ -64,8 +58,6 @@ const Hero = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default Hero;
