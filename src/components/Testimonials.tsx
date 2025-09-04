@@ -23,21 +23,21 @@ const Testimonials = () => {
   ];
 
   return (
-    <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
+    <section className="py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-8 sm:mb-12">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 sm:mb-4">OUR HAPPY CUSTOMERS</h2>
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold mb-4">OUR HAPPY CUSTOMERS</h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {testimonials.map((testimonial, index) => (
-            <div key={index} className="glass-card rounded-xl sm:rounded-2xl p-4 sm:p-6 h-full flex flex-col">
+            <div key={index} className="glass-card rounded-2xl p-6">
               {/* Rating */}
-              <div className="flex items-center mb-3 sm:mb-4">
+              <div className="flex items-center mb-4">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    className={`w-4 h-4 sm:w-5 sm:h-5 ${
+                    className={`w-5 h-5 ${
                       i < testimonial.rating 
                         ? "text-yellow-400 fill-current" 
                         : "text-gray-300"
@@ -47,13 +47,13 @@ const Testimonials = () => {
               </div>
 
               {/* Review */}
-              <p className="text-muted-foreground mb-3 sm:mb-4 leading-relaxed text-sm sm:text-base flex-grow">
+              <p className="text-muted-foreground mb-4 leading-relaxed">
                 "{testimonial.review}"
               </p>
 
               {/* Reviewer info */}
               <div className="flex items-center">
-                <h4 className="font-semibold text-sm sm:text-base">{testimonial.name}</h4>
+                <h4 className="font-semibold">{testimonial.name}</h4>
                 {testimonial.verified && (
                   <span className="ml-2 text-green-500 text-sm">✓</span>
                 )}
