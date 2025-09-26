@@ -136,34 +136,26 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex gap-3">
         <Button 
           className="flex-1 glass-button" 
-          size="touch"
+          size="lg"
           onClick={handleAddToCart}
           disabled={!selectedSize || !product.inStock}
         >
           Add to Cart
         </Button>
-        <div className="flex gap-3">
-          <Button 
-            variant="outline" 
-            size="touch-icon"
-            onClick={() => setIsWishlisted(!isWishlisted)}
-            className={`touch-target ${isWishlisted ? "text-red-500 border-red-500" : ""}`}
-            aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          >
-            <Heart className={`w-5 h-5 ${isWishlisted ? "fill-current" : ""}`} />
-          </Button>
-          <Button 
-            variant="outline" 
-            size="touch-icon"
-            className="touch-target"
-            aria-label="Share product"
-          >
-            <Share2 className="w-5 h-5" />
-          </Button>
-        </div>
+        <Button 
+          variant="outline" 
+          size="lg"
+          onClick={() => setIsWishlisted(!isWishlisted)}
+          className={isWishlisted ? "text-red-500 border-red-500" : ""}
+        >
+          <Heart className={`w-5 h-5 ${isWishlisted ? "fill-current" : ""}`} />
+        </Button>
+        <Button variant="outline" size="lg">
+          <Share2 className="w-5 h-5" />
+        </Button>
       </div>
 
       {/* Product Features */}
