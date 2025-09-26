@@ -12,14 +12,56 @@ export default {
 	theme: {
 		container: {
 			center: true,
-			padding: '2rem',
+			padding: '1rem',
 			screens: {
+				sm: '100%',
+				md: '100%',
+				lg: '1024px',
+				xl: '1280px',
 				'2xl': '1400px'
 			}
+		},
+		screens: {
+			'xs': '475px',
+			'sm': '640px',
+			'md': '768px',
+			'lg': '1024px',
+			'xl': '1280px',
+			'2xl': '1536px',
 		},
 		extend: {
 			fontFamily: {
 				luxury: ["Bodoni Moda", "serif"],
+			},
+			fontSize: {
+				'xs': ['0.75rem', { lineHeight: '1rem' }],
+				'sm': ['0.875rem', { lineHeight: '1.25rem' }],
+				'base': ['1rem', { lineHeight: '1.5rem' }],
+				'lg': ['1.125rem', { lineHeight: '1.75rem' }],
+				'xl': ['1.25rem', { lineHeight: '1.75rem' }],
+				'2xl': ['1.5rem', { lineHeight: '2rem' }],
+				'3xl': ['1.875rem', { lineHeight: '2.25rem' }],
+				'4xl': ['2.25rem', { lineHeight: '2.5rem' }],
+				'5xl': ['3rem', { lineHeight: '1' }],
+				'6xl': ['3.75rem', { lineHeight: '1' }],
+				'7xl': ['4.5rem', { lineHeight: '1' }],
+				'8xl': ['6rem', { lineHeight: '1' }],
+				'9xl': ['8rem', { lineHeight: '1' }],
+				// Fluid typography for mobile
+				'fluid-xs': 'clamp(0.75rem, 2vw, 0.875rem)',
+				'fluid-sm': 'clamp(0.875rem, 2.5vw, 1rem)',
+				'fluid-base': 'clamp(1rem, 3vw, 1.125rem)',
+				'fluid-lg': 'clamp(1.125rem, 3.5vw, 1.25rem)',
+				'fluid-xl': 'clamp(1.25rem, 4vw, 1.5rem)',
+				'fluid-2xl': 'clamp(1.5rem, 5vw, 1.875rem)',
+				'fluid-3xl': 'clamp(1.875rem, 6vw, 2.25rem)',
+				'fluid-4xl': 'clamp(2.25rem, 7vw, 3rem)',
+			},
+			spacing: {
+				'safe-bottom': 'env(safe-area-inset-bottom)',
+				'safe-top': 'env(safe-area-inset-top)',
+				'safe-left': 'env(safe-area-inset-left)',
+				'safe-right': 'env(safe-area-inset-right)',
 			},
 			colors: {
 				border: 'hsl(var(--border))',

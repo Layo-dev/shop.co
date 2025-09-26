@@ -37,31 +37,34 @@ const QuantitySelector = ({
     <div className="flex items-center border rounded-lg glass-card">
       <Button
         variant="ghost"
-        size="sm"
+        size="touch-icon"
         onClick={handleDecrease}
         disabled={quantity <= min}
-        className="h-10 w-10 p-0"
+        className="h-12 w-12 p-0 touch-target"
+        aria-label="Decrease quantity"
       >
-        <Minus className="w-4 h-4" />
+        <Minus className="w-5 h-5" />
       </Button>
       
       <input
         type="number"
         value={quantity}
         onChange={handleInputChange}
-        className="w-16 h-10 text-center border-0 bg-transparent focus:outline-none"
+        className="w-16 h-12 text-center border-0 bg-transparent focus:outline-none mobile-text font-medium"
         min={min}
         max={max}
+        aria-label="Product quantity"
       />
       
       <Button
         variant="ghost"
-        size="sm"
+        size="touch-icon"
         onClick={handleIncrease}
         disabled={quantity >= max}
-        className="h-10 w-10 p-0"
+        className="h-12 w-12 p-0 touch-target"
+        aria-label="Increase quantity"
       >
-        <Plus className="w-4 h-4" />
+        <Plus className="w-5 h-5" />
       </Button>
     </div>
   );

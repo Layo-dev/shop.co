@@ -2,12 +2,13 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, ShoppingCart, User, Menu } from "lucide-react";
+import { Search, ShoppingCart, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import CartSidebar from "@/components/CartSidebar";
 import SearchModal from "@/components/SearchModal";
 import AccountSidebar from "@/components/AccountSidebar";
+import MobileNav from "@/components/MobileNav";
 
 const Header = () => {
   const { state } = useCart();
@@ -16,9 +17,9 @@ const Header = () => {
   const [accountOpen, setAccountOpen] = useState(false);
 
   return (
-    <header className="w-full bg-background/95 backdrop-blur-md border-b border-border sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+    <header className="w-full bg-background/95 backdrop-blur-md border-b border-border sticky top-0 z-50 safe-top">
+      <div className="max-w-7xl mx-auto mobile-padding">
+        <div className="flex items-center justify-between h-16 sm:h-18">
           {/* Logo */}
           <div className="flex items-center">
             <Link to="/" className="transition-transform hover:scale-105 focus:outline-none" aria-label="Go to homepage">
@@ -57,28 +58,30 @@ const Header = () => {
           </div>
 
           {/* Right side actions */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4">
             {/* Search icon for mobile */}
             <Button 
               variant="ghost" 
-              size="icon" 
-              className="lg:hidden"
+              size="touch-icon" 
+              className="lg:hidden touch-target"
               onClick={() => setSearchOpen(true)}
+              aria-label="Search products"
             >
               <Search className="w-5 h-5" />
             </Button>
             
             <Button 
               variant="ghost" 
-              size="icon" 
-              className="relative"
+              size="touch-icon" 
+              className="relative touch-target"
               onClick={() => setCartOpen(true)}
+              aria-label={`Shopping cart with ${state.totalItems} items`}
             >
               <ShoppingCart className="w-5 h-5" />
               {state.totalItems > 0 && (
                 <Badge 
                   variant="destructive" 
-                  className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs"
+                  className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs font-bold"
                 >
                   {state.totalItems > 99 ? '99+' : state.totalItems}
                 </Badge>
@@ -87,16 +90,16 @@ const Header = () => {
             
             <Button 
               variant="ghost" 
-              size="icon"
+              size="touch-icon"
+              className="touch-target"
               onClick={() => setAccountOpen(true)}
+              aria-label="User account"
             >
               <User className="w-5 h-5" />
             </Button>
 
-            {/* Mobile menu */}
-            <Button variant="ghost" size="icon" className="md:hidden">
-              <Menu className="w-5 h-5" />
-            </Button>
+            {/* Mobile navigation */}
+            <MobileNav />
           </div>
         </div>
       </div>

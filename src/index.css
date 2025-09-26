@@ -160,6 +160,10 @@
     transform: scale(1.02);
   }
   
+  .glass-button:active {
+    transform: scale(0.98);
+  }
+  
   .hero-gradient {
     background: var(--gradient-hero);
   }
@@ -171,6 +175,29 @@
     background-clip: text;
   }
   
+  /* Mobile-optimized touch utilities */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
+  }
+  
+  .mobile-padding {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+  
+  .mobile-text {
+    @apply text-fluid-base leading-relaxed;
+  }
+  
+  .mobile-title {
+    @apply text-fluid-2xl sm:text-fluid-3xl font-bold leading-tight;
+  }
+  
+  .mobile-subtitle {
+    @apply text-fluid-lg sm:text-fluid-xl font-semibold;
+  }
+  
   /* Scroll and animation utilities */
   .hover-scale {
     transition: transform 0.2s ease-out;
@@ -180,8 +207,43 @@
     transform: scale(1.05);
   }
   
+  .hover-scale:active {
+    transform: scale(0.98);
+  }
+  
   .parallax-bg {
     transform: translateZ(0);
     will-change: transform;
+  }
+  
+  /* Mobile-specific grid utilities */
+  .mobile-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6;
+  }
+  
+  .mobile-flex {
+    @apply flex flex-col sm:flex-row gap-4 sm:gap-6;
+  }
+  
+  /* Touch feedback */
+  .touch-feedback {
+    @apply active:scale-95 transition-transform duration-150;
+  }
+  
+  /* Safe area utilities for mobile notches */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .safe-left {
+    padding-left: env(safe-area-inset-left);
+  }
+  
+  .safe-right {
+    padding-right: env(safe-area-inset-right);
   }
 }
