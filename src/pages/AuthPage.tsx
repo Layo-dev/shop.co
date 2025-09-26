@@ -61,13 +61,16 @@ const AuthPage = () => {
     mode: 'onSubmit',
   });
 
-  // Clear forms when switching modes
+  // Clear forms when switching modes - only clear the non-active form
   useEffect(() => {
-    signInForm.reset();
-    signUpForm.reset();
-    signInForm.clearErrors();
-    signUpForm.clearErrors();
-  }, [isSignUp]);
+    if (isSignUp) {
+      signInForm.reset();
+      signInForm.clearErrors();
+    } else {
+      signUpForm.reset();
+      signUpForm.clearErrors();
+    }
+  }, [isSignUp, signInForm, signUpForm]);
 
   const onSignIn = async (data: SignInFormData) => {
     setIsLoading(true);
@@ -188,7 +191,7 @@ const AuthPage = () => {
           
           <CardContent className="space-y-6">
             {isSignUp ? (
-              <Form {...signUpForm}>
+              <Form {...signUpForm} key="signup-form">
                 <form onSubmit={signUpForm.handleSubmit(onSignUp)} className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <FormField
@@ -234,12 +237,13 @@ const AuthPage = () => {
                         <FormControl>
                           <div className="relative">
                             <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                            <Input 
-                              placeholder="john@example.com" 
-                              type="email" 
-                              className="pl-10" 
-                              {...field} 
-                            />
+                             <Input 
+                               placeholder="john@example.com" 
+                               type="email" 
+                               autoComplete="email"
+                               className="pl-10" 
+                               {...field} 
+                             />
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -287,7 +291,7 @@ const AuthPage = () => {
                 </form>
               </Form>
             ) : (
-              <Form {...signInForm}>
+              <Form {...signInForm} key="signin-form">
                 <form onSubmit={signInForm.handleSubmit(onSignIn)} className="space-y-4">
                   <FormField
                     control={signInForm.control}
@@ -298,12 +302,13 @@ const AuthPage = () => {
                         <FormControl>
                           <div className="relative">
                             <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                            <Input 
-                              placeholder="john@example.com" 
-                              type="email" 
-                              className="pl-10" 
-                              {...field} 
-                            />
+                             <Input 
+                               placeholder="john@example.com" 
+                               type="email" 
+                               autoComplete="email"
+                               className="pl-10" 
+                               {...field} 
+                             />
                           </div>
                         </FormControl>
                         <FormMessage />
