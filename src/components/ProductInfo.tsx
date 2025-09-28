@@ -6,6 +6,7 @@ import ColorSelector from "@/components/ColorSelector";
 import SizeSelector from "@/components/SizeSelector";
 import QuantitySelector from "@/components/QuantitySelector";
 import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import { toast } from "@/hooks/use-toast";
 import { Product } from "@/data/products";
 
@@ -23,10 +24,12 @@ interface ProductInfoProps {
 
 const ProductInfo = ({ product }: ProductInfoProps) => {
   const { addItem } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const [selectedColor, setSelectedColor] = useState(product.colors?.[0]);
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  
+  const isWishlisted = isInWishlist(product.id.toString());
 
   const handleAddToCart = () => {
     if (!selectedSize) {
@@ -148,7 +151,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         <Button 
           variant="outline" 
           size="lg"
-          onClick={() => setIsWishlisted(!isWishlisted)}
+          onClick={() => isWishlisted ? removeFromWishlist(product.id.toString()) : addToWishlist(product.id.toString())}
           className={isWishlisted ? "text-red-500 border-red-500" : ""}
         >
           <Heart className={`w-5 h-5 ${isWishlisted ? "fill-current" : ""}`} />

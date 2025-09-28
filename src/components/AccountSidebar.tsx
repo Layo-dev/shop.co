@@ -16,10 +16,10 @@ const AccountSidebar = ({ open, onOpenChange }: AccountSidebarProps) => {
   const navigate = useNavigate();
 
   const accountMenuItems = [
-    { icon: Package, label: "My Orders", count: 3 },
-    { icon: Heart, label: "Wishlist", count: 12 },
-    { icon: Gift, label: "Rewards & Offers" },
-    { icon: Settings, label: "Account Settings" },
+    { icon: Package, label: "My Orders", count: 3, href: "/account/orders" },
+    { icon: Heart, label: "Wishlist", count: 12, href: "/account/wishlist" },
+    { icon: Gift, label: "Rewards & Offers", href: "/account" },
+    { icon: Settings, label: "Account Settings", href: "/account" },
   ];
 
   const handleSignOut = async () => {
@@ -29,6 +29,11 @@ const AccountSidebar = ({ open, onOpenChange }: AccountSidebarProps) => {
 
   const handleAuthAction = (action: 'signin' | 'signup') => {
     navigate('/auth');
+    onOpenChange(false);
+  };
+
+  const handleMenuClick = (href: string) => {
+    navigate(href);
     onOpenChange(false);
   };
 
@@ -133,6 +138,7 @@ const AccountSidebar = ({ open, onOpenChange }: AccountSidebarProps) => {
                 key={index}
                 variant="ghost"
                 className="w-full justify-start h-auto p-4"
+                onClick={() => handleMenuClick(item.href)}
               >
                 <item.icon className="w-5 h-5 mr-3" />
                 <span className="flex-1 text-left">{item.label}</span>
