@@ -1,3 +1,7 @@
+import paypalBadge from "@/assets/Badge (1).svg";
+import applePayBadge from "@/assets/Badge (2).svg";
+import googlePayBadge from "@/assets/Badge (3).svg";
+
 const Footer = () => {
   const footerSections = [
     {
@@ -18,7 +22,13 @@ const Footer = () => {
     }
   ];
 
-  const paymentMethods = ["Visa", "Mastercard", "PayPal", "Apple Pay", "Google Pay"];
+  const paymentMethods = [
+    { name: "Visa", type: "text" },
+    { name: "Mastercard", type: "text" },
+    { name: "PayPal", type: "svg", src: paypalBadge },
+    { name: "Apple Pay", type: "svg", src: applePayBadge },
+    { name: "Google Pay", type: "svg", src: googlePayBadge }
+  ];
 
   return (
     <footer className="bg-muted/30 pt-16 pb-8 px-4 sm:px-6 lg:px-8">
@@ -71,11 +81,20 @@ const Footer = () => {
               Shop.co © 2000-2023, All Rights Reserved
             </p>
             
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 flex-wrap justify-center">
               {paymentMethods.map((method, index) => (
-                <div key={index} className="glass-card rounded-lg p-2 text-xs font-semibold min-w-[50px] text-center">
-                  {method}
-                </div>
+                method.type === "svg" ? (
+                  <img 
+                    key={index} 
+                    src={method.src} 
+                    alt={method.name}
+                    className="h-8 object-contain"
+                  />
+                ) : (
+                  <div key={index} className="glass-card rounded-lg p-2 text-xs font-semibold min-w-[50px] text-center">
+                    {method.name}
+                  </div>
+                )
               ))}
             </div>
           </div>
