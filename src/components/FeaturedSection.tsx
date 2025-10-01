@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Star, TrendingUp, Sparkles } from "lucide-react";
+import { TrendingUp, Sparkles } from "lucide-react";
+import ProductCard from "./ProductCard";
 import productTshirt from "@/assets/product-tshirt.jpg";
 import productJeans from "@/assets/product-jeans.jpg";
 import productShirt from "@/assets/product-shirt.jpg";
@@ -9,35 +10,42 @@ import productOrange from "@/assets/product-orange.jpg";
 const FeaturedSection = () => {
   const featuredProducts = [
     {
+      id: 1,
       image: productTshirt,
       title: "Trending T-Shirt",
       price: 120,
       originalPrice: 150,
       rating: 4.8,
-      badge: "Trending"
+      reviews: 45,
+      discount: 20
     },
     {
+      id: 4,
       image: productJeans,
       title: "Premium Jeans",
       price: 240,
       originalPrice: 300,
       rating: 4.6,
-      badge: "Popular"
+      reviews: 38,
+      discount: 20
     },
     {
+      id: 5,
       image: productShirt,
       title: "Elegant Shirt",
       price: 180,
       rating: 4.9,
-      badge: "New"
+      reviews: 52
     },
     {
+      id: 6,
       image: productOrange,
       title: "Casual Wear",
       price: 130,
       originalPrice: 160,
       rating: 4.7,
-      badge: "Sale"
+      reviews: 29,
+      discount: 19
     }
   ];
 
@@ -73,51 +81,8 @@ const FeaturedSection = () => {
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {featuredProducts.map((product, index) => (
-              <Link key={index} to="/casual" className="group">
-                <div className="glass-card rounded-3xl overflow-hidden transition-all duration-300 hover:scale-105">
-                  <div className="relative">
-                    <img
-                      src={product.image}
-                      alt={product.title}
-                      className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    <div className="absolute top-3 left-3">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                        product.badge === 'Trending' ? 'bg-primary text-primary-foreground' :
-                        product.badge === 'Popular' ? 'bg-blue-600 text-white' :
-                        product.badge === 'New' ? 'bg-green-600 text-white' :
-                        'bg-destructive text-destructive-foreground'
-                      }`}>
-                        {product.badge}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <div className="p-4 space-y-2">
-                    <h3 className="font-semibold text-lg">{product.title}</h3>
-                    <div className="flex items-center gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-4 h-4 ${
-                            i < Math.floor(product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                          }`}
-                        />
-                      ))}
-                      <span className="text-sm text-muted-foreground ml-1">({product.rating})</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg font-bold">${product.price}</span>
-                      {product.originalPrice && (
-                        <span className="text-sm text-muted-foreground line-through">
-                          ${product.originalPrice}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </Link>
+            {featuredProducts.map((product) => (
+              <ProductCard key={product.id} {...product} />
             ))}
           </div>
           
