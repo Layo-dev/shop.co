@@ -1,6 +1,6 @@
-import paypalBadge from "@/assets/Badge (1).svg";
-import applePayBadge from "@/assets/Badge (2).svg";
-import googlePayBadge from "@/assets/Badge (3).svg";
+import paypalBadge from "@/assets/badge-paypal.svg";
+import applePayBadge from "@/assets/badge-apple-pay.svg";
+import googlePayBadge from "@/assets/badge-google-pay.svg";
 
 const Footer = () => {
   const footerSections = [
