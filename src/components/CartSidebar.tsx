@@ -4,6 +4,8 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/contexts/CartContext";
+import PaystackButton from "@/components/PaystackButton";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface CartSidebarProps {
   open: boolean;
@@ -11,7 +13,8 @@ interface CartSidebarProps {
 }
 
 const CartSidebar = ({ open, onOpenChange }: CartSidebarProps) => {
-  const { state, removeItem, updateQuantity } = useCart();
+  const { state, removeItem, updateQuantity, clearCart } = useCart();
+  const { user } = useAuth();
 
   const handleQuantityChange = (id: string, newQuantity: number) => {
     if (newQuantity < 1) {
@@ -24,6 +27,15 @@ const CartSidebar = ({ open, onOpenChange }: CartSidebarProps) => {
   const subtotal = state.totalPrice;
   const shipping = subtotal > 100 ? 0 : 15;
   const total = subtotal + shipping;
+
+  const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY as string | undefined;
+  const customerEmail = user?.email || "";
+
+  // Convert USD cart total to NGN for Paystack
+  const usdToNgnRate = Number(import.meta.env.VITE_USD_TO_NGN || 1600);
+  const totalInNaira = total * usdToNgnRate;
+  const amountForPaystack = Math.round(totalInNaira); // component multiplies by 100 internally
+  const checkoutDisabled = state.items.length === 0 || !publicKey || !customerEmail;
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -139,9 +151,34 @@ const CartSidebar = ({ open, onOpenChange }: CartSidebarProps) => {
                   <span>${total.toFixed(2)}</span>
                 </div>
                 
-                <Button className="w-full glass-button" size="lg">
+                <PaystackButton
+                  className="w-full glass-button"
+                  amount={amountForPaystack}
+                  email={customerEmail}
+                  publicKey={publicKey || ""}
+                  currency="NGN"
+                  metadata={{
+                    items: state.items.map((i) => ({
+                      id: i.id,
+                      productId: i.productId,
+                      name: i.product.title,
+                      price: i.product.price,
+                      quantity: i.quantity,
+                      color: i.selectedColor?.name,
+                      size: i.selectedSize,
+                    })),
+                    totals: { subtotalUSD: subtotal, shippingUSD: shipping, totalUSD: total, usdToNgnRate, totalNGN: totalInNaira },
+                  }}
+                  onSuccess={() => {
+                    clearCart();
+                    onOpenChange(false);
+                  }}
+                  onClose={() => {}
+                  }
+                  disabled={checkoutDisabled}
+                >
                   Proceed to Checkout
-                </Button>
+                </PaystackButton>
               </div>
             </>
           )}

@@ -14,6 +14,16 @@ const Header = () => {
   const [cartOpen, setCartOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
+  
+  const goTo = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      window.location.href = `/#${id}`;
+    }
+  };
 
   return (
     <header className="w-full bg-background/95 backdrop-blur-md border-b border-border sticky top-0 z-50">
@@ -31,12 +41,12 @@ const Header = () => {
             <Link to="/shop" className="text-foreground hover:text-primary transition-colors font-medium">
               Shop
             </Link>
-            <a href="#" className="text-foreground hover:text-primary transition-colors font-medium">
+            <Link to="/#on-sale" onClick={(e) => goTo(e, 'on-sale')} className="text-foreground hover:text-primary transition-colors font-medium">
               On Sale
-            </a>
-            <a href="#" className="text-foreground hover:text-primary transition-colors font-medium">
+            </Link>
+            <Link to="/#new-arrivals" onClick={(e) => goTo(e, 'new-arrivals')} className="text-foreground hover:text-primary transition-colors font-medium">
               New Arrivals
-            </a>
+            </Link>
             <Link to="/brands" className="text-foreground hover:text-primary transition-colors font-medium">
               Brands
             </Link>
