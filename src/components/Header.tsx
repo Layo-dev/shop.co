@@ -2,15 +2,17 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, ShoppingCart, User, Menu } from "lucide-react";
+import { Search, ShoppingCart, User, Menu, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
+import { useAdminRole } from "@/hooks/useAdminRole";
 import CartSidebar from "@/components/CartSidebar";
 import SearchModal from "@/components/SearchModal";
 import AccountSidebar from "@/components/AccountSidebar";
 
 const Header = () => {
   const { state } = useCart();
+  const { isAdmin } = useAdminRole();
   const [cartOpen, setCartOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -94,6 +96,14 @@ const Header = () => {
                 </Badge>
               )}
             </Button>
+            
+            {isAdmin && (
+              <Link to="/admin">
+                <Button variant="ghost" size="icon" title="Admin Dashboard">
+                  <Shield className="w-5 w-5" />
+                </Button>
+              </Link>
+            )}
             
             <Button 
               variant="ghost" 

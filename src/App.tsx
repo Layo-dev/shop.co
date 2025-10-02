@@ -7,6 +7,7 @@ import ScrollToTopOnRoute from "@/components/ScrollToTopOnRoute";
 import { CartProvider } from "@/contexts/CartContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
+import { AdminRoute } from "@/components/AdminRoute";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import CategoryPage from "./pages/CategoryPage";
@@ -17,6 +18,8 @@ import AuthPage from "./pages/AuthPage";
 import AccountPage from "./pages/AccountPage";
 import OrdersPage from "./pages/OrdersPage";
 import WishlistPage from "./pages/WishlistPage";
+import AdminPage from "./pages/AdminPage";
+import ProductManagementPage from "./pages/ProductManagementPage";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +46,8 @@ const App = () => (
                 <Route path="/formal" element={<CategoryPage category="formal" />} />
                 <Route path="/party" element={<CategoryPage category="party" />} />
                 <Route path="/gym" element={<CategoryPage category="gym" />} />
+                <Route path="/admin" element={<AdminRoute><AdminPage /></AdminRoute>} />
+                <Route path="/admin/products" element={<AdminRoute><ProductManagementPage /></AdminRoute>} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
