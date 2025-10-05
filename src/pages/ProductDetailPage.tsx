@@ -1,5 +1,6 @@
 import { useParams, Navigate } from "react-router-dom";
-import { products } from "@/data/products";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Newsletter from "@/components/Newsletter";
@@ -8,41 +9,80 @@ import ImageGallery from "@/components/ImageGallery";
 import ProductInfo from "@/components/ProductInfo";
 import ProductTabs from "@/components/ProductTabs";
 import RelatedProducts from "@/components/RelatedProducts";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const ProductDetailPage = () => {
   const { id } = useParams<{ id: string }>();
-  const productId = id ? parseInt(id) : null;
+  const [product, setProduct] = useState<any>(null);
+  const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   
-  const product = products.find(p => p.id === productId);
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (!id) return;
+      
+      const { data: productData } = await supabase
+        .from('products')
+        .select('*')
+        .eq('id', id)
+        .single();
+      
+      if (productData) {
+        setProduct(productData);
+        
+        // Fetch related products
+        const { data: related } = await supabase
+          .from('products')
+          .select('*')
+          .eq('category', productData.category)
+          .neq('id', id)
+          .limit(4);
+        
+        if (related) {
+          setRelatedProducts(related);
+        }
+      }
+      
+      setLoading(false);
+    };
+
+    fetchProduct();
+  }, [id]);
   
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <Skeleton className="h-8 w-64 mb-8" />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              <Skeleton className="h-96" />
+              <Skeleton className="h-96" />
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   if (!product) {
     return <Navigate to="/404" replace />;
   }
 
-  // Enhanced product data with additional images and details
+  // Enhanced product data
   const enhancedProduct = {
     ...product,
-    images: [
-      product.image,
-      "/src/assets/product-tshirt.jpg",
-      "/src/assets/product-shirt.jpg",
-      "/src/assets/product-jeans.jpg"
-    ],
-    colors: [
-      { name: "Blue", value: "#3B82F6" },
-      { name: "Black", value: "#000000" },
-      { name: "White", value: "#FFFFFF" },
-      { name: "Gray", value: "#6B7280" }
-    ],
-    description: "This premium quality garment combines style and comfort. Crafted with attention to detail, it features a modern fit that's perfect for any occasion. The fabric is carefully selected for durability and comfort.",
-    material: "100% Premium Cotton",
-    care: ["Machine wash cold", "Do not bleach", "Tumble dry low", "Iron on low heat"],
-    inStock: true
+    price: Number(product.price),
+    originalPrice: product.original_price ? Number(product.original_price) : undefined,
+    rating: Number(product.rating),
+    images: product.images || [product.image_url],
+    colors: product.colors || [],
+    sizes: product.sizes || [],
+    inStock: product.in_stock,
+    care: product.care ? (typeof product.care === 'string' ? [product.care] : product.care) : []
   };
-
-  const relatedProducts = products
-    .filter(p => p.id !== product.id && p.category === product.category)
-    .slice(0, 4);
 
   return (
     <div className="min-h-screen bg-background">

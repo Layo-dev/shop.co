@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -6,7 +6,7 @@ import Newsletter from "@/components/Newsletter";
 import Breadcrumb from "@/components/Breadcrumb";
 import FilterSidebar from "@/components/FilterSidebar";
 import ProductGrid from "@/components/ProductGrid";
-import { products } from "@/data/products";
+import { supabase } from "@/integrations/supabase/client";
 
 interface CategoryPageProps {
   category: "casual" | "formal" | "party" | "gym";
@@ -14,6 +14,8 @@ interface CategoryPageProps {
 
 const CategoryPage = ({ category }: CategoryPageProps) => {
   const [searchParams] = useSearchParams();
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     categories: [] as string[],
     priceRange: [0, 500] as [number, number],
@@ -23,30 +25,44 @@ const CategoryPage = ({ category }: CategoryPageProps) => {
   });
   const [sortBy, setSortBy] = useState("most-popular");
 
-  const categoryProducts = products.filter(product => 
-    product.category.toLowerCase() === category
-  );
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      const { data } = await supabase
+        .from('products')
+        .select('*')
+        .ilike('category', category);
+      
+      if (data) {
+        setProducts(data);
+      }
+      setLoading(false);
+    };
+
+    fetchProducts();
+  }, [category]);
+
+  const categoryProducts = products;
 
   const filteredProducts = categoryProducts.filter(product => {
     // Apply filters
-    if (filters.categories.length && !filters.categories.includes(product.subcategory)) return false;
-    if (product.price < filters.priceRange[0] || product.price > filters.priceRange[1]) return false;
-    if (filters.colors.length && !filters.colors.includes(product.color)) return false;
-    if (filters.sizes.length && !product.sizes.some(size => filters.sizes.includes(size))) return false;
-    if (filters.dressStyles.length && !filters.dressStyles.includes(product.style)) return false;
+    if (filters.categories.length && product.subcategory && !filters.categories.includes(product.subcategory)) return false;
+    const price = Number(product.price);
+    if (price < filters.priceRange[0] || price > filters.priceRange[1]) return false;
+    // Skip color/size/style filters if product doesn't have those fields
     return true;
   });
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
       case "price-low-high":
-        return a.price - b.price;
+        return Number(a.price) - Number(b.price);
       case "price-high-low":
-        return b.price - a.price;
+        return Number(b.price) - Number(a.price);
       case "newest":
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       default:
-        return b.rating - a.rating; // most popular by rating
+        return Number(b.rating) - Number(a.rating); // most popular by rating
     }
   });
 

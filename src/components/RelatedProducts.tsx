@@ -1,8 +1,7 @@
 import ProductCard from "./ProductCard";
-import { Product } from "@/data/products";
 
 interface RelatedProductsProps {
-  products: Product[];
+  products: any[];
 }
 
 const RelatedProducts = ({ products }: RelatedProductsProps) => {
@@ -20,11 +19,11 @@ const RelatedProducts = ({ products }: RelatedProductsProps) => {
           <ProductCard
             key={product.id}
             id={product.id}
-            image={product.image}
+            image={product.image_url || product.images?.[0] || ''}
             title={product.title}
-            price={product.price}
-            originalPrice={product.originalPrice}
-            rating={product.rating}
+            price={Number(product.price)}
+            originalPrice={product.original_price ? Number(product.original_price) : undefined}
+            rating={Number(product.rating)}
             reviews={product.reviews}
             discount={product.discount}
           />

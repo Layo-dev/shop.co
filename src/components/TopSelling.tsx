@@ -1,38 +1,29 @@
+import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { Skeleton } from "@/components/ui/skeleton";
+
 const TopSelling = () => {
-  // Using placeholders since we're focusing on layout
-  const products = [{
-    id: 2,
-    image: "/placeholder.svg",
-    title: "Vertical Striped Shirt",
-    price: 212,
-    originalPrice: 232,
-    rating: 5.0,
-    reviews: 20,
-    discount: 20
-  }, {
-    id: 3,
-    image: "/placeholder.svg",
-    title: "Courage Graphic T-shirt",
-    price: 145,
-    rating: 4.0,
-    reviews: 67
-  }, {
-    id: 7,
-    image: "/placeholder.svg",
-    title: "Loose Fit Bermuda Shorts",
-    price: 80,
-    rating: 3.0,
-    reviews: 56
-  }, {
-    id: 8,
-    image: "/placeholder.svg",
-    title: "Faded Skinny Jeans",
-    price: 210,
-    rating: 4.5,
-    reviews: 135
-  }];
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('rating', { ascending: false })
+        .limit(4);
+      
+      if (data) {
+        setProducts(data);
+      }
+      setLoading(false);
+    };
+
+    fetchProducts();
+  }, []);
   return <section id="on-sale" className="py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
@@ -40,7 +31,25 @@ const TopSelling = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {products.map((product, index) => <ProductCard key={index} {...product} />)}
+          {loading ? (
+            Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="h-96 w-full" />
+            ))
+          ) : (
+            products.map((product) => (
+              <ProductCard 
+                key={product.id} 
+                id={product.id}
+                image={product.image_url || product.images?.[0]}
+                title={product.title}
+                price={Number(product.price)}
+                originalPrice={product.original_price ? Number(product.original_price) : undefined}
+                rating={Number(product.rating)}
+                reviews={product.reviews}
+                discount={product.discount}
+              />
+            ))
+          )}
         </div>
 
         <div className="text-center">

@@ -1,43 +1,29 @@
+import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { Button } from "@/components/ui/button";
-import productTshirt from "@/assets/product-tshirt.jpg";
-import productJeans from "@/assets/product-jeans.jpg";
-import productShirt from "@/assets/product-shirt.jpg";
-import productOrange from "@/assets/product-orange.jpg";
+import { supabase } from "@/integrations/supabase/client";
+import { Skeleton } from "@/components/ui/skeleton";
+
 const NewArrivals = () => {
-  const products = [{
-    id: 1,
-    image: productTshirt,
-    title: "T-shirt with Tape Details",
-    price: 120,
-    rating: 4.5,
-    reviews: 5
-  }, {
-    id: 4,
-    image: productJeans,
-    title: "Skinny Fit Jeans",
-    price: 240,
-    originalPrice: 260,
-    rating: 3.5,
-    reviews: 14,
-    discount: 20
-  }, {
-    id: 5,
-    image: productShirt,
-    title: "Checkered Shirt",
-    price: 180,
-    rating: 4.5,
-    reviews: 12
-  }, {
-    id: 6,
-    image: productOrange,
-    title: "Sleeve Striped T-shirt",
-    price: 130,
-    originalPrice: 160,
-    rating: 4.5,
-    reviews: 8,
-    discount: 30
-  }];
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(4);
+      
+      if (data) {
+        setProducts(data);
+      }
+      setLoading(false);
+    };
+
+    fetchProducts();
+  }, []);
   return <section id="new-arrivals" className="py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
@@ -45,7 +31,25 @@ const NewArrivals = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {products.map((product, index) => <ProductCard key={index} {...product} />)}
+          {loading ? (
+            Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="h-96 w-full" />
+            ))
+          ) : (
+            products.map((product) => (
+              <ProductCard 
+                key={product.id} 
+                id={product.id}
+                image={product.image_url || product.images?.[0]}
+                title={product.title}
+                price={Number(product.price)}
+                originalPrice={product.original_price ? Number(product.original_price) : undefined}
+                rating={Number(product.rating)}
+                reviews={product.reviews}
+                discount={product.discount}
+              />
+            ))
+          )}
         </div>
 
         <div className="text-center">

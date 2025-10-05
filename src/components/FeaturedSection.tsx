@@ -1,53 +1,31 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { TrendingUp, Sparkles } from "lucide-react";
 import ProductCard from "./ProductCard";
-import productTshirt from "@/assets/product-tshirt.jpg";
-import productJeans from "@/assets/product-jeans.jpg";
-import productShirt from "@/assets/product-shirt.jpg";
-import productOrange from "@/assets/product-orange.jpg";
+import { supabase } from "@/integrations/supabase/client";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const FeaturedSection = () => {
-  const featuredProducts = [
-    {
-      id: 1,
-      image: productTshirt,
-      title: "Trending T-Shirt",
-      price: 120,
-      originalPrice: 150,
-      rating: 4.8,
-      reviews: 45,
-      discount: 20
-    },
-    {
-      id: 4,
-      image: productJeans,
-      title: "Premium Jeans",
-      price: 240,
-      originalPrice: 300,
-      rating: 4.6,
-      reviews: 38,
-      discount: 20
-    },
-    {
-      id: 5,
-      image: productShirt,
-      title: "Elegant Shirt",
-      price: 180,
-      rating: 4.9,
-      reviews: 52
-    },
-    {
-      id: 6,
-      image: productOrange,
-      title: "Casual Wear",
-      price: 130,
-      originalPrice: 160,
-      rating: 4.7,
-      reviews: 29,
-      discount: 19
-    }
-  ];
+  const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('rating', { ascending: false })
+        .limit(4);
+      
+      if (data) {
+        setFeaturedProducts(data);
+      }
+      setLoading(false);
+    };
+
+    fetchProducts();
+  }, []);
 
   const collections = [
     {
@@ -81,9 +59,25 @@ const FeaturedSection = () => {
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.id} {...product} />
-            ))}
+            {loading ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <Skeleton key={i} className="h-96 w-full" />
+              ))
+            ) : (
+              featuredProducts.map((product) => (
+                <ProductCard 
+                  key={product.id} 
+                  id={product.id}
+                  image={product.image_url || product.images?.[0]}
+                  title={product.title}
+                  price={Number(product.price)}
+                  originalPrice={product.original_price ? Number(product.original_price) : undefined}
+                  rating={Number(product.rating)}
+                  reviews={product.reviews}
+                  discount={product.discount}
+                />
+              ))
+            )}
           </div>
           
           <div className="text-center">

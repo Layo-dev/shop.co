@@ -1,9 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Search, Clock, TrendingUp } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { products } from "@/data/products";
+import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 
 interface SearchModalProps {
@@ -13,7 +13,24 @@ interface SearchModalProps {
 
 const SearchModal = ({ open, onOpenChange }: SearchModalProps) => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [products, setProducts] = useState<any[]>([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const { data } = await supabase
+        .from('products')
+        .select('*');
+      
+      if (data) {
+        setProducts(data);
+      }
+    };
+
+    if (open) {
+      fetchProducts();
+    }
+  }, [open]);
 
   // Search functionality
   const searchResults = useMemo(() => {
@@ -24,17 +41,17 @@ const SearchModal = ({ open, onOpenChange }: SearchModalProps) => {
     return products.filter((product) =>
       product.title.toLowerCase().includes(query) ||
       product.category.toLowerCase().includes(query) ||
-      product.subcategory.toLowerCase().includes(query) ||
+      product.subcategory?.toLowerCase().includes(query) ||
       product.description?.toLowerCase().includes(query)
     ).slice(0, 8); // Limit to 8 results
-  }, [searchQuery]);
+  }, [searchQuery, products]);
 
   // Popular searches
   const popularSearches = [
     "T-shirts", "Jeans", "Sneakers", "Dresses", "Hoodies", "Formal Wear"
   ];
 
-  const handleProductClick = (productId: number) => {
+  const handleProductClick = (productId: string) => {
     navigate(`/product/${productId}`);
     onOpenChange(false);
     setSearchQuery("");
@@ -111,7 +128,7 @@ const SearchModal = ({ open, onOpenChange }: SearchModalProps) => {
                       onClick={() => handleProductClick(product.id)}
                     >
                       <img
-                        src={product.image}
+                        src={product.image_url || product.images?.[0]}
                         alt={product.title}
                         className="w-12 h-12 object-cover rounded-md"
                       />
@@ -119,13 +136,13 @@ const SearchModal = ({ open, onOpenChange }: SearchModalProps) => {
                       <div className="flex-1 min-w-0">
                         <h4 className="font-medium text-sm truncate">{product.title}</h4>
                         <p className="text-xs text-muted-foreground">
-                          {product.category} • {product.subcategory}
+                          {product.category}{product.subcategory ? ` • ${product.subcategory}` : ''}
                         </p>
                         <div className="flex items-center gap-2 mt-1">
-                          <span className="font-semibold text-sm">${product.price}</span>
-                          {product.originalPrice && (
+                          <span className="font-semibold text-sm">${Number(product.price)}</span>
+                          {product.original_price && (
                             <span className="text-xs text-muted-foreground line-through">
-                              ${product.originalPrice}
+                              ${Number(product.original_price)}
                             </span>
                           )}
                           {product.discount && (

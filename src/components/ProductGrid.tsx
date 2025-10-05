@@ -5,20 +5,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
 
 interface Product {
-  id: number;
+  id: string;
   title: string;
-  image: string;
+  image_url?: string;
+  images?: string[];
   price: number;
-  originalPrice?: number;
+  original_price?: number;
   rating: number;
   reviews: number;
   discount?: number;
   category: string;
-  subcategory: string;
-  color: string;
-  sizes: string[];
-  style: string;
-  createdAt: string;
+  subcategory?: string;
+  created_at: string;
 }
 
 interface ProductGridProps {
@@ -121,11 +119,11 @@ const ProductGrid = ({ products, category, sortBy, onSortChange, totalProducts }
           <ProductCard
             key={product.id}
             id={product.id}
-            image={product.image}
+            image={product.image_url || product.images?.[0] || ''}
             title={product.title}
-            price={product.price}
-            originalPrice={product.originalPrice}
-            rating={product.rating}
+            price={Number(product.price)}
+            originalPrice={product.original_price ? Number(product.original_price) : undefined}
+            rating={Number(product.rating)}
             reviews={product.reviews}
             discount={product.discount}
           />
