@@ -5,13 +5,66 @@ import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Package } from 'lucide-react';
-import { useOrders } from '@/hooks/useOrders';
+import { ArrowLeft, Package, Eye, RotateCcw, X } from 'lucide-react';
+import { useOrders, Order } from '@/hooks/useOrders';
 import { format } from 'date-fns';
+import { useState } from 'react';
+import { OrderDetailsDialog } from '@/components/OrderDetailsDialog';
+import { useCart } from '@/contexts/CartContext';
+import { useToast } from '@/hooks/use-toast';
+import { Product } from '@/data/products';
 
 const OrdersPage = () => {
   const { user, loading: authLoading } = useAuth();
-  const { orders, loading: ordersLoading } = useOrders();
+  const { orders, loading: ordersLoading, cancelOrder, reorderItems } = useOrders();
+  const { addItem } = useCart();
+  const { toast } = useToast();
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleViewDetails = (order: Order) => {
+    setSelectedOrder(order);
+    setDialogOpen(true);
+  };
+
+  const handleReorder = async (orderId: string) => {
+    const items = await reorderItems(orderId);
+    if (items) {
+      items.forEach((item) => {
+        if (item.products) {
+          addItem({
+            productId: parseInt(item.product_id),
+            product: {
+              id: parseInt(item.product_id),
+              title: item.products.title,
+              price: item.products.price,
+              image: item.products.image_url || '',
+              images: item.products.images || [],
+              rating: 0,
+              reviews: 0,
+              category: "",
+              subcategory: "",
+              color: item.color || '',
+              sizes: item.size ? [item.size] : [],
+              style: "",
+              createdAt: new Date().toISOString(),
+            },
+            selectedSize: item.size || '',
+            selectedColor: item.color ? { name: item.color, value: item.color } : undefined,
+            quantity: item.quantity,
+          });
+        }
+      });
+      toast({
+        title: "Items added to cart",
+        description: `${items.length} item(s) from your order have been added to cart`,
+      });
+    }
+  };
+
+  const handleCancelOrder = async (orderId: string) => {
+    await cancelOrder(orderId);
+  };
 
   if (authLoading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
@@ -136,13 +189,31 @@ const OrdersPage = () => {
                           </p>
                         )}
                       </div>
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm">
+                      <div className="flex gap-2 flex-wrap">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleViewDetails(order)}
+                        >
+                          <Eye className="w-4 h-4 mr-2" />
                           View Details
                         </Button>
-                        {order.status === 'delivered' && (
-                          <Button variant="outline" size="sm">
-                            Reorder
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleReorder(order.id)}
+                        >
+                          <RotateCcw className="w-4 h-4 mr-2" />
+                          Reorder
+                        </Button>
+                        {order.status === 'pending' && (
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleCancelOrder(order.id)}
+                          >
+                            <X className="w-4 h-4 mr-2" />
+                            Cancel
                           </Button>
                         )}
                       </div>
@@ -156,6 +227,11 @@ const OrdersPage = () => {
       </main>
 
       <Footer />
+      <OrderDetailsDialog 
+        order={selectedOrder} 
+        open={dialogOpen} 
+        onOpenChange={setDialogOpen} 
+      />
     </div>
   );
 };

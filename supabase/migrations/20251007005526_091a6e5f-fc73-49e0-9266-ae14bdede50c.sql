@@ -1,0 +1,6 @@
+-- Add foreign key relationship between order_items and products
+ALTER TABLE public.order_items 
+ADD CONSTRAINT order_items_product_id_fkey 
+FOREIGN KEY (product_id) 
+REFERENCES public.products(id) 
+ON DELETE SET NULL;
