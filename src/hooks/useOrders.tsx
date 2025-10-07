@@ -24,6 +24,12 @@ export interface OrderItem {
   size?: string;
   color?: string;
   created_at: string;
+  products?: {
+    title: string;
+    image_url: string;
+    images: any;
+    price: number;
+  };
 }
 
 export const useOrders = () => {
@@ -49,7 +55,15 @@ export const useOrders = () => {
         .from('orders')
         .select(`
           *,
-          order_items (*)
+          order_items (
+            *,
+            products (
+              title,
+              image_url,
+              images,
+              price
+            )
+          )
         `)
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
@@ -157,11 +171,71 @@ export const useOrders = () => {
     }
   };
 
+  const cancelOrder = async (orderId: string) => {
+    try {
+      const order = orders.find(o => o.id === orderId);
+      if (order?.status !== 'pending') {
+        toast({
+          title: "Error",
+          description: "Only pending orders can be cancelled",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const { error } = await supabase
+        .from('orders')
+        .update({ status: 'cancelled' })
+        .eq('id', orderId);
+
+      if (error) throw error;
+
+      setOrders(prev => 
+        prev.map(order => 
+          order.id === orderId ? { ...order, status: 'cancelled' as const } : order
+        )
+      );
+
+      toast({
+        title: "Order cancelled",
+        description: "Your order has been cancelled successfully",
+      });
+    } catch (error) {
+      console.error('Error cancelling order:', error);
+      toast({
+        title: "Error",
+        description: "Failed to cancel order",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const reorderItems = async (orderId: string) => {
+    try {
+      const order = orders.find(o => o.id === orderId);
+      if (!order?.order_items) {
+        throw new Error('Order items not found');
+      }
+
+      return order.order_items;
+    } catch (error) {
+      console.error('Error getting order items for reorder:', error);
+      toast({
+        title: "Error",
+        description: "Failed to reorder items",
+        variant: "destructive",
+      });
+      return null;
+    }
+  };
+
   return {
     orders,
     loading,
     createOrder,
     updateOrderStatus,
+    cancelOrder,
+    reorderItems,
     refetchOrders: fetchOrders,
   };
 };
