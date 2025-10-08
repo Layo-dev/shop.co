@@ -37,7 +37,7 @@ export const products: Product[] = [
     id: 1,
     title: "Gradient Graphic T-shirt",
     image: "/src/assets/product-tshirt.jpg",
-    price: 145,
+    price: 232000, // ₦145 * 1600
     rating: 3.5,
     reviews: 120,
     category: "Casual",
@@ -51,8 +51,8 @@ export const products: Product[] = [
     id: 2,
     title: "Polo with Contrast Trims",
     image: "/src/assets/product-shirt.jpg",
-    price: 212,
-    originalPrice: 242,
+    price: 339200, // ₦212 * 1600
+    originalPrice: 387200, // ₦242 * 1600
     rating: 4.0,
     reviews: 95,
     discount: 20,
@@ -67,8 +67,8 @@ export const products: Product[] = [
     id: 3,
     title: "Black Striped T-shirt",
     image: "/src/assets/product-tshirt.jpg",
-    price: 120,
-    originalPrice: 150,
+    price: 192000, // ₦120 * 1600
+    originalPrice: 240000, // ₦150 * 1600
     rating: 5.0,
     reviews: 200,
     discount: 30,
@@ -83,8 +83,8 @@ export const products: Product[] = [
     id: 4,
     title: "Skinny Fit Jeans",
     image: "/src/assets/product-jeans.jpg",
-    price: 240,
-    originalPrice: 260,
+    price: 384000, // ₦240 * 1600
+    originalPrice: 416000, // ₦260 * 1600
     rating: 3.5,
     reviews: 85,
     discount: 20,
@@ -99,7 +99,7 @@ export const products: Product[] = [
     id: 5,
     title: "Checkered Shirt",
     image: "/src/assets/product-shirt.jpg",
-    price: 180,
+    price: 288000, // ₦180 * 1600
     rating: 4.5,
     reviews: 150,
     category: "Casual",
@@ -113,8 +113,8 @@ export const products: Product[] = [
     id: 6,
     title: "Sleeve Striped T-shirt",
     image: "/src/assets/product-orange.jpg",
-    price: 130,
-    originalPrice: 160,
+    price: 208000, // ₦130 * 1600
+    originalPrice: 256000, // ₦160 * 1600
     rating: 4.5,
     reviews: 175,
     discount: 30,
@@ -129,7 +129,7 @@ export const products: Product[] = [
     id: 7,
     title: "Casual Hoodie",
     image: "/src/assets/product-tshirt.jpg",
-    price: 95,
+    price: 152000, // ₦95 * 1600
     rating: 4.2,
     reviews: 110,
     category: "Casual",
@@ -143,7 +143,7 @@ export const products: Product[] = [
     id: 8,
     title: "Denim Shorts",
     image: "/src/assets/product-jeans.jpg",
-    price: 85,
+    price: 136000, // ₦85 * 1600
     rating: 3.8,
     reviews: 90,
     category: "Casual",
@@ -157,7 +157,7 @@ export const products: Product[] = [
     id: 9,
     title: "Cotton Blend T-shirt",
     image: "/src/assets/product-orange.jpg",
-    price: 75,
+    price: 120000, // ₦75 * 1600
     rating: 4.0,
     reviews: 125,
     category: "Casual",
@@ -173,7 +173,7 @@ export const products: Product[] = [
     id: 10,
     title: "Business Dress Shirt",
     image: "/src/assets/product-shirt.jpg",
-    price: 185,
+    price: 296000, // ₦185 * 1600
     rating: 4.5,
     reviews: 145,
     category: "Formal",
@@ -187,7 +187,7 @@ export const products: Product[] = [
     id: 11,
     title: "Classic Navy Blazer",
     image: "/src/assets/product-shirt.jpg",
-    price: 295,
+    price: 472000, // ₦295 * 1600
     rating: 4.8,
     reviews: 85,
     category: "Formal",
@@ -201,7 +201,7 @@ export const products: Product[] = [
     id: 12,
     title: "Formal Trousers",
     image: "/src/assets/product-jeans.jpg",
-    price: 145,
+    price: 232000, // ₦145 * 1600
     rating: 4.2,
     reviews: 105,
     category: "Formal",
@@ -215,7 +215,7 @@ export const products: Product[] = [
     id: 13,
     title: "Silk Tie Collection",
     image: "/src/assets/product-orange.jpg",
-    price: 65,
+    price: 104000, // ₦65 * 1600
     rating: 4.6,
     reviews: 75,
     category: "Formal",
@@ -229,8 +229,8 @@ export const products: Product[] = [
     id: 14,
     title: "Premium Suit Set",
     image: "/src/assets/product-shirt.jpg",
-    price: 495,
-    originalPrice: 595,
+    price: 792000, // ₦495 * 1600
+    originalPrice: 952000, // ₦595 * 1600
     rating: 4.9,
     reviews: 55,
     discount: 25,
@@ -245,7 +245,7 @@ export const products: Product[] = [
     id: 15,
     title: "Executive Shirt",
     image: "/src/assets/product-shirt.jpg",
-    price: 125,
+    price: 200000, // ₦125 * 1600
     rating: 4.3,
     reviews: 95,
     category: "Formal",
@@ -261,7 +261,7 @@ export const products: Product[] = [
     id: 16,
     title: "Sequin Party Dress",
     image: "/src/assets/product-orange.jpg",
-    price: 225,
+    price: 248000, // ₦225 * 1600
     rating: 4.7,
     reviews: 165,
     category: "Party",
@@ -275,7 +275,7 @@ export const products: Product[] = [
     id: 17,
     title: "Satin Blouse",
     image: "/src/assets/product-shirt.jpg",
-    price: 155,
+    price: 278000, // ₦155 * 1600
     rating: 4.4,
     reviews: 125,
     category: "Party",
@@ -289,7 +289,7 @@ export const products: Product[] = [
     id: 18,
     title: "Mini Party Skirt",
     image: "/src/assets/product-orange.jpg",
-    price: 95,
+    price: 152000, // ₦95 * 1600
     rating: 4.1,
     reviews: 88,
     category: "Party",
@@ -303,8 +303,8 @@ export const products: Product[] = [
     id: 19,
     title: "Statement Heels",
     image: "/src/assets/product-orange.jpg",
-    price: 185,
-    originalPrice: 225,
+    price: 296000, // ₦185 * 1600
+    originalPrice: 360000, // ₦225 * 1600
     rating: 4.6,
     reviews: 142,
     discount: 20,
@@ -319,7 +319,7 @@ export const products: Product[] = [
     id: 20,
     title: "Party Accessories Set",
     image: "/src/assets/product-orange.jpg",
-    price: 75,
+    price: 120000, // ₦75 * 1600
     rating: 4.2,
     reviews: 98,
     category: "Party",
@@ -335,7 +335,7 @@ export const products: Product[] = [
     id: 21,
     title: "Performance Activewear Set",
     image: "/src/assets/product-tshirt.jpg",
-    price: 135,
+    price: 216000, // ₦135 * 1600
     rating: 4.5,
     reviews: 185,
     category: "Gym",
@@ -349,7 +349,7 @@ export const products: Product[] = [
     id: 22,
     title: "Sports Bra Collection",
     image: "/src/assets/product-tshirt.jpg",
-    price: 55,
+    price: 88000, // ₦55 * 1600
     rating: 4.3,
     reviews: 155,
     category: "Gym",
@@ -363,7 +363,7 @@ export const products: Product[] = [
     id: 23,
     title: "High-Waist Leggings",
     image: "/src/assets/product-jeans.jpg",
-    price: 85,
+    price: 136000, // ₦85 * 1600
     rating: 4.6,
     reviews: 210,
     category: "Gym",
@@ -377,8 +377,8 @@ export const products: Product[] = [
     id: 24,
     title: "Running Sneakers",
     image: "/src/assets/product-orange.jpg",
-    price: 165,
-    originalPrice: 195,
+    price: 264000, // ₦165 * 1600
+    originalPrice: 312000, // ₦195 * 1600
     rating: 4.8,
     reviews: 275,
     discount: 15,
@@ -393,7 +393,7 @@ export const products: Product[] = [
     id: 25,
     title: "Athletic Tank Top",
     image: "/src/assets/product-tshirt.jpg",
-    price: 45,
+    price: 72000, // ₦45 * 1600
     rating: 4.2,
     reviews: 135,
     category: "Gym",

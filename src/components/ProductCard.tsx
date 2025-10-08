@@ -65,9 +65,9 @@ const ProductCard = ({
 
         {/* Price */}
         <div className="flex items-center gap-2">
-          <span className="text-lg font-bold text-foreground">${price}</span>
+          <span className="text-lg font-bold text-foreground">₦{price.toLocaleString()}</span>
           {originalPrice && (
-            <span className="text-muted-foreground line-through">${originalPrice}</span>
+            <span className="text-muted-foreground line-through">₦{originalPrice.toLocaleString()}</span>
           )}
         </div>
       </div>

@@ -199,7 +199,7 @@ export const ProductForm = ({ onSuccess, onCancel, initialData }: ProductFormPro
             name="price"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Price</FormLabel>
+                <FormLabel>Price (₦)</FormLabel>
                 <FormControl>
                   <Input {...field} type="number" step="0.01" placeholder="0.00" />
                 </FormControl>
@@ -213,7 +213,7 @@ export const ProductForm = ({ onSuccess, onCancel, initialData }: ProductFormPro
             name="original_price"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Original Price</FormLabel>
+                <FormLabel>Original Price (₦)</FormLabel>
                 <FormControl>
                   <Input {...field} type="number" step="0.01" placeholder="0.00" />
                 </FormControl>

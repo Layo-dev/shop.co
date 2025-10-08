@@ -87,7 +87,7 @@ export const ProductTable = ({ products, onEdit, onDelete }: ProductTableProps) 
                   </TableCell>
                   <TableCell className="font-medium">{product.title}</TableCell>
                   <TableCell className="capitalize">{product.category}</TableCell>
-                  <TableCell>${product.price}</TableCell>
+                  <TableCell>₦{product.price.toLocaleString()}</TableCell>
                   <TableCell>
                     <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                       product.in_stock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'

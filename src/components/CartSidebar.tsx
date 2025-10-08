@@ -25,16 +25,13 @@ const CartSidebar = ({ open, onOpenChange }: CartSidebarProps) => {
   };
 
   const subtotal = state.totalPrice;
-  const shipping = subtotal > 100 ? 0 : 15;
+  const shipping = subtotal > 160000 ? 0 : 24000; // Free shipping over ₦160,000, else ₦24,000
   const total = subtotal + shipping;
 
   const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY as string | undefined;
   const customerEmail = user?.email || "";
 
-  // Convert USD cart total to NGN for Paystack
-  const usdToNgnRate = Number(import.meta.env.VITE_USD_TO_NGN || 1600);
-  const totalInNaira = total * usdToNgnRate;
-  const amountForPaystack = Math.round(totalInNaira); // component multiplies by 100 internally
+  // Remove USD/NGN conversion logic and Paystack amount calculation if not needed for display
   const checkoutDisabled = state.items.length === 0 || !publicKey || !customerEmail;
 
   return (
@@ -88,7 +85,7 @@ const CartSidebar = ({ open, onOpenChange }: CartSidebarProps) => {
                       </div>
                       
                       <div className="flex items-center justify-between mt-2">
-                        <span className="font-semibold">${item.product.price}</span>
+                        <span className="font-semibold">₦{item.product.price}</span>
                         
                         <div className="flex items-center gap-2">
                           <Button
@@ -131,16 +128,16 @@ const CartSidebar = ({ open, onOpenChange }: CartSidebarProps) => {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Subtotal ({state.totalItems} items)</span>
-                    <span>${subtotal.toFixed(2)}</span>
+                    <span>₦{subtotal.toLocaleString()}</span>
                   </div>
                   
                   <div className="flex justify-between text-sm">
                     <span>Shipping</span>
-                    <span>{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span>
+                    <span>{shipping === 0 ? 'Free' : `₦${shipping.toLocaleString()}`}</span>
                   </div>
                   
                   {shipping === 0 && (
-                    <p className="text-xs text-green-600">Free shipping on orders over $100!</p>
+                    <p className="text-xs text-green-600">Free shipping on orders over ₦160,000!</p>
                   )}
                 </div>
                 
@@ -148,12 +145,12 @@ const CartSidebar = ({ open, onOpenChange }: CartSidebarProps) => {
                 
                 <div className="flex justify-between font-semibold">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>₦{total.toLocaleString()}</span>
                 </div>
                 
                 <PaystackButton
                   className="w-full glass-button"
-                  amount={amountForPaystack}
+                  amount={total} // Paystack amount is in Naira
                   email={customerEmail}
                   publicKey={publicKey || ""}
                   currency="NGN"
@@ -167,7 +164,7 @@ const CartSidebar = ({ open, onOpenChange }: CartSidebarProps) => {
                       color: i.selectedColor?.name,
                       size: i.selectedSize,
                     })),
-                    totals: { subtotalUSD: subtotal, shippingUSD: shipping, totalUSD: total, usdToNgnRate, totalNGN: totalInNaira },
+                    totals: { subtotal: subtotal, shipping: shipping, total: total },
                   }}
                   onSuccess={() => {
                     clearCart();
