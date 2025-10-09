@@ -22,6 +22,8 @@ const productSchema = z.object({
   material: z.string().optional(),
   care: z.string().optional(),
   image_url: z.string().min(1, 'Image is required'),
+  sizes: z.array(z.string()).min(1, 'Select at least one size'),
+  shipping_fee: z.string().min(1, 'Shipping fee is required'),
 });
 
 type ProductFormData = z.infer<typeof productSchema>;
@@ -48,6 +50,8 @@ export const ProductForm = ({ onSuccess, onCancel, initialData }: ProductFormPro
       material: initialData?.material || '',
       care: initialData?.care || '',
       image_url: initialData?.image_url || '',
+      sizes: initialData?.sizes || [],
+      shipping_fee: initialData?.shipping_fee?.toString() || '',
     },
   });
 
@@ -66,6 +70,8 @@ export const ProductForm = ({ onSuccess, onCancel, initialData }: ProductFormPro
         material: data.material || null,
         care: data.care || null,
         image_url: data.image_url,
+        sizes: data.sizes,
+        shipping_fee: parseFloat(data.shipping_fee),
         updated_at: new Date().toISOString(),
       };
 
@@ -273,6 +279,49 @@ export const ProductForm = ({ onSuccess, onCancel, initialData }: ProductFormPro
             Cancel
           </Button>
         </div>
+
+        <FormField
+          control={form.control}
+          name="sizes"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Product Sizes</FormLabel>
+              <div className="flex gap-2 flex-wrap">
+                {['S', 'M', 'L', 'XL'].map(size => (
+                  <Button
+                    key={size}
+                    type="button"
+                    variant={field.value.includes(size) ? 'default' : 'outline'}
+                    onClick={() => {
+                      if (field.value.includes(size)) {
+                        field.onChange(field.value.filter((s: string) => s !== size));
+                      } else {
+                        field.onChange([...field.value, size]);
+                      }
+                    }}
+                  >
+                    {size}
+                  </Button>
+                ))}
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="shipping_fee"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Shipping Fee (₦)</FormLabel>
+              <FormControl>
+                <Input {...field} type="number" min="0" step="1" placeholder="e.g. 24000" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </form>
     </Form>
   );

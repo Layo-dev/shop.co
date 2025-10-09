@@ -13,6 +13,8 @@ interface Product {
   price: number;
   image_url: string;
   in_stock: boolean;
+  sizes?: string[];
+  shipping_fee?: number;
 }
 
 interface ProductTableProps {
@@ -64,6 +66,7 @@ export const ProductTable = ({ products, onEdit, onDelete }: ProductTableProps) 
               <TableHead>Title</TableHead>
               <TableHead>Category</TableHead>
               <TableHead>Price</TableHead>
+              <TableHead>Shipping Fee</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -85,9 +88,15 @@ export const ProductTable = ({ products, onEdit, onDelete }: ProductTableProps) 
                       className="w-12 h-12 object-cover rounded"
                     />
                   </TableCell>
-                  <TableCell className="font-medium">{product.title}</TableCell>
+                  <TableCell className="font-medium">
+                    <div>{product.title}</div>
+                    {product.sizes && product.sizes.length > 0 && (
+                      <div className="text-xs text-muted-foreground">Sizes: {product.sizes.join(', ')}</div>
+                    )}
+                  </TableCell>
                   <TableCell className="capitalize">{product.category}</TableCell>
                   <TableCell>₦{product.price.toLocaleString()}</TableCell>
+                  <TableCell>₦{product.shipping_fee?.toLocaleString()}</TableCell>
                   <TableCell>
                     <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                       product.in_stock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
