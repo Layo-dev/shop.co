@@ -177,21 +177,27 @@ const CartSidebar = ({ open, onOpenChange }: CartSidebarProps) => {
                     totals: { subtotal: subtotal, shipping: shipping, total: total },
                   }}
                   onSuccess={async () => {
-                    await createOrder({
-                      total_amount: total,
-                      items: state.items.map((i) => ({
-                        product_id: String(i.productId),
-                        quantity: i.quantity,
-                        price_at_time: i.product.price,
-                        size: i.selectedSize,
-                        color: i.selectedColor?.name,
-                      })),
-                    });
-                    clearCart();
-                    onOpenChange(false);
+                    try {
+                      console.log('Order creation triggered, items:', state.items, 'user:', user);
+                      const result = await createOrder({
+                        total_amount: total,
+                        items: state.items.map((i) => ({
+                          product_id: String(i.productId),
+                          quantity: i.quantity,
+                          price_at_time: i.product.price,
+                          size: i.selectedSize,
+                          color: i.selectedColor?.name,
+                        })),
+                      });
+                      console.log('Order createOrder result:', result);
+                      clearCart();
+                      onOpenChange(false);
+                    } catch (err) {
+                      console.error('Order creation failed:', err);
+                      // Optionally show toast
+                    }
                   }}
-                  onClose={() => {}
-                  }
+                  onClose={() => {}}
                   disabled={checkoutDisabled}
                 >
                   Proceed to Checkout

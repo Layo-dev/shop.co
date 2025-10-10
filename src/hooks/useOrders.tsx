@@ -95,8 +95,9 @@ export const useOrders = () => {
     }>;
   }) => {
     if (!user) throw new Error('User not authenticated');
-
+    
     try {
+      console.log('createOrder called w/ user:', user.id, 'orderData:', orderData);
       // Create order
       const { data: order, error: orderError } = await supabase
         .from('orders')
@@ -108,9 +109,10 @@ export const useOrders = () => {
         })
         .select()
         .single();
-
-      if (orderError) throw orderError;
-
+      if (orderError) {
+        console.error('Order insert failed:', orderError);
+        throw orderError;
+      }
       // Create order items
       const orderItems = orderData.items.map(item => ({
         order_id: order.id,
@@ -120,19 +122,20 @@ export const useOrders = () => {
       const { error: itemsError } = await supabase
         .from('order_items')
         .insert(orderItems);
-
-      if (itemsError) throw itemsError;
-
+      if (itemsError) {
+        console.error('Order items insert failed:', itemsError);
+        throw itemsError;
+      }
       await fetchOrders();
-      
+
       toast({
         title: "Order created",
         description: "Your order has been successfully created",
       });
-
+      console.log('createOrder ALL DONE, order:', order);
       return order;
     } catch (error) {
-      console.error('Error creating order:', error);
+      console.error('createOrder encounter error:', error);
       toast({
         title: "Error",
         description: "Failed to create order",
