@@ -14,6 +14,8 @@ interface CartState {
   items: CartItem[];
   totalItems: number;
   totalPrice: number;
+  totalShippingFee: number;
+  grandTotal: number;
 }
 
 type CartAction =
@@ -34,7 +36,7 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const generateCartItemId = (productId: number, color?: string, size?: string) => {
-  return `${productId}-${color || 'no-color'}-${size || 'no-size'}`;
+  return "${productId}-${color || 'no-color'}-${size || 'no-size'}";
 };
 
 const cartReducer = (state: CartState, action: CartAction): CartState => {
@@ -102,7 +104,12 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
 const calculateTotals = (items: CartItem[]) => {
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
-  return { totalItems, totalPrice };
+  const totalShippingFee = items.reduce((sum, item) => {
+    const shippingFee = item.product.shippingFee || 0;
+    return sum + (shippingFee * item.quantity);
+  }, 0);
+  const grandTotal = totalPrice + totalShippingFee;
+  return { totalItems, totalPrice, totalShippingFee, grandTotal };
 };
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -110,6 +117,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     items: [],
     totalItems: 0,
     totalPrice: 0,
+    totalShippingFee: 0,
+    grandTotal: 0,
   });
 
   // Update totals whenever items change

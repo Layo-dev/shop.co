@@ -19,6 +19,7 @@ export interface Product {
   material?: string;
   care?: string[];
   inStock?: boolean;
+  shippingFee?: number;
 }
 
 export interface Review {

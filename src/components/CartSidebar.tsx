@@ -25,8 +25,8 @@ const CartSidebar = ({ open, onOpenChange }: CartSidebarProps) => {
   };
 
   const subtotal = state.totalPrice;
-  const shipping = subtotal > 160000 ? 0 : 24000; // Free shipping over ₦160,000, else ₦24,000
-  const total = subtotal + shipping;
+  const shipping = state.totalShippingFee;
+  const total = state.grandTotal;
 
   const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY as string | undefined;
   const customerEmail = user?.email || "";
@@ -84,29 +84,36 @@ const CartSidebar = ({ open, onOpenChange }: CartSidebarProps) => {
                         )}
                       </div>
                       
-                      <div className="flex items-center justify-between mt-2">
-                        <span className="font-semibold">₦{item.product.price}</span>
+                      <div className="mt-2 space-y-1">
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold">₦{item.product.price}</span>
+                          
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                            >
+                              <Minus className="w-3 h-3" />
+                            </Button>
+                            
+                            <span className="w-8 text-center text-sm">{item.quantity}</span>
+                            
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                            >
+                              <Plus className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        </div>
                         
-                        <div className="flex items-center gap-2">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                          >
-                            <Minus className="w-3 h-3" />
-                          </Button>
-                          
-                          <span className="w-8 text-center text-sm">{item.quantity}</span>
-                          
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                          >
-                            <Plus className="w-3 h-3" />
-                          </Button>
+                        <div className="flex items-center justify-between text-xs text-muted-foreground">
+                          <span>Shipping: {item.product.shippingFee ? `₦${item.product.shippingFee.toLocaleString()}` : 'Free'}</span>
+                          <span>Total: ₦{((item.product.price + (item.product.shippingFee || 0)) * item.quantity).toLocaleString()}</span>
                         </div>
                       </div>
                     </div>
@@ -137,7 +144,7 @@ const CartSidebar = ({ open, onOpenChange }: CartSidebarProps) => {
                   </div>
                   
                   {shipping === 0 && (
-                    <p className="text-xs text-green-600">Free shipping on orders over ₦160,000!</p>
+                    <p className="text-xs text-green-600">All items have free shipping!</p>
                   )}
                 </div>
                 
@@ -160,6 +167,7 @@ const CartSidebar = ({ open, onOpenChange }: CartSidebarProps) => {
                       productId: i.productId,
                       name: i.product.title,
                       price: i.product.price,
+                      shippingFee: i.product.shippingFee || 0,
                       quantity: i.quantity,
                       color: i.selectedColor?.name,
                       size: i.selectedSize,

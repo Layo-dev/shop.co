@@ -180,6 +180,7 @@ export type Database = {
           price: number
           rating: number | null
           reviews: number | null
+          shipping_fee: number | null
           sizes: Json | null
           style: string | null
           subcategory: string | null
@@ -202,6 +203,7 @@ export type Database = {
           price: number
           rating?: number | null
           reviews?: number | null
+          shipping_fee?: number | null
           sizes?: Json | null
           style?: string | null
           subcategory?: string | null
@@ -224,6 +226,7 @@ export type Database = {
           price?: number
           rating?: number | null
           reviews?: number | null
+          shipping_fee?: number | null
           sizes?: Json | null
           style?: string | null
           subcategory?: string | null

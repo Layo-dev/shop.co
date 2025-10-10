@@ -12,7 +12,7 @@ const ShopPage = () => {
       title: "MEN'S FASHION",
       subtitle: "Suits, Casual Wear, Sportswear, Accessories",
       image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=600&fit=crop&crop=face",
-      link: "/casual",
+      link: "/mens",
       bgGradient: "from-blue-600/20 to-blue-800/20"
     },
     {
@@ -20,7 +20,7 @@ const ShopPage = () => {
       title: "WOMEN'S FASHION",
       subtitle: "Dresses, Casual Wear, Professional, Accessories",
       image: "https://images.unsplash.com/photo-1494790108755-2616c9a93800?w=500&h=600&fit=crop&crop=face",
-      link: "/casual",
+      link: "/womens",
       bgGradient: "from-pink-600/20 to-purple-800/20"
     },
     {

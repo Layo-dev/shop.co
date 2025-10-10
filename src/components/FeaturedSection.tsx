@@ -16,7 +16,7 @@ const FeaturedSection = () => {
         .from('products')
         .select('*')
         .order('rating', { ascending: false })
-        .limit(4);
+        .limit(10);
       
       if (data) {
         setFeaturedProducts(data);
@@ -58,9 +58,9 @@ const FeaturedSection = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-12">
             {loading ? (
-              Array.from({ length: 4 }).map((_, i) => (
+              Array.from({ length: 10 }).map((_, i) => (
                 <Skeleton key={i} className="h-96 w-full" />
               ))
             ) : (

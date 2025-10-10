@@ -19,6 +19,7 @@ interface ProductInfoProps {
     material?: string;
     care?: string[];
     inStock?: boolean;
+    shipping_fee?: number;
   };
 }
 
@@ -28,6 +29,12 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
   const [selectedColor, setSelectedColor] = useState(product.colors?.[0]);
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
+  
+  // Normalize fields between Supabase product shape and local Product shape for display
+  const normalizedInStock = (product as any).in_stock ?? product.inStock ?? true;
+  const normalizedOriginalPrice = (product as any).original_price ?? product.originalPrice;
+  const normalizedRating = Number((product as any).rating ?? 0);
+  const normalizedReviews = Number((product as any).reviews ?? 0);
   
   const isWishlisted = isInWishlist(product.id.toString());
 
@@ -41,9 +48,34 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       return;
     }
 
+    // Map Supabase product to Product interface with shipping fee
+    const productForCart: Product = {
+      id: product.id,
+      title: product.title,
+      image: (product as any).image_url || (product as any).image || (product as any).images?.[0] || "",
+      images: product.images,
+      price: product.price,
+      originalPrice: (product as any).original_price ?? product.originalPrice,
+      rating: product.rating,
+      reviews: product.reviews,
+      discount: product.discount,
+      category: product.category,
+      subcategory: product.subcategory,
+      color: product.color,
+      colors: product.colors,
+      sizes: product.sizes,
+      style: product.style,
+      createdAt: (product as any).created_at ?? product.createdAt,
+      description: product.description,
+      material: product.material,
+      care: product.care,
+      inStock: (product as any).in_stock ?? product.inStock,
+      shippingFee: (product as any).shipping_fee,
+    };
+
     addItem({
       productId: product.id,
-      product: product,
+      product: productForCart,
       selectedColor,
       selectedSize,
       quantity,
@@ -67,7 +99,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
                 <Star
                   key={i}
                   className={`w-5 h-5 ${
-                    i < Math.floor(product.rating) 
+                    i < Math.floor(normalizedRating) 
                       ? "text-yellow-400 fill-current" 
                       : "text-gray-300"
                   }`}
@@ -75,11 +107,11 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
               ))}
             </div>
             <span className="text-sm text-muted-foreground">
-              {product.rating}/5 ({product.reviews} reviews)
+              {normalizedRating}/5 ({normalizedReviews} reviews)
             </span>
           </div>
-          <Badge variant={product.inStock ? "default" : "destructive"}>
-            {product.inStock ? "In Stock" : "Out of Stock"}
+          <Badge variant={normalizedInStock ? "default" : "destructive"}>
+            {normalizedInStock ? "In Stock" : "Out of Stock"}
           </Badge>
         </div>
       </div>
@@ -87,10 +119,10 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       {/* Price */}
       <div className="flex items-center gap-3">
         <span className="text-3xl font-bold text-foreground">₦{product.price.toLocaleString()}</span>
-        {product.originalPrice && (
+        {normalizedOriginalPrice && (
           <>
             <span className="text-xl text-muted-foreground line-through">
-              ₦{product.originalPrice.toLocaleString()}
+              ₦{Number(normalizedOriginalPrice).toLocaleString()}
             </span>
             {product.discount && (
               <Badge variant="destructive" className="text-sm">
@@ -144,7 +176,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
           className="flex-1 glass-button" 
           size="lg"
           onClick={handleAddToCart}
-          disabled={!selectedSize || !product.inStock}
+          disabled={!selectedSize || !normalizedInStock}
         >
           Add to Cart
         </Button>

@@ -12,6 +12,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import CategoryPage from "./pages/CategoryPage";
 import ShopPage from "./pages/ShopPage";
+import MensFashionPage from "./pages/MensFashionPage";
+import WomensFashionPage from "./pages/WomensFashionPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import BrandsPage from "./pages/BrandsPage";
 import AuthPage from "./pages/AuthPage";
@@ -37,6 +39,8 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<AuthPage />} />
                 <Route path="/shop" element={<ShopPage />} />
+                <Route path="/mens" element={<MensFashionPage />} />
+                <Route path="/womens" element={<WomensFashionPage />} />
                 <Route path="/product/:id" element={<ProductDetailPage />} />
                 <Route path="/brands" element={<BrandsPage />} />
                 <Route path="/account" element={<AccountPage />} />
