@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/contexts/CartContext";
 import PaystackButton from "@/components/PaystackButton";
 import { useAuth } from "@/contexts/AuthContext";
+import { useOrders } from "@/hooks/useOrders";
 
 interface CartSidebarProps {
   open: boolean;
@@ -15,6 +16,7 @@ interface CartSidebarProps {
 const CartSidebar = ({ open, onOpenChange }: CartSidebarProps) => {
   const { state, removeItem, updateQuantity, clearCart } = useCart();
   const { user } = useAuth();
+  const { createOrder } = useOrders();
 
   const handleQuantityChange = (id: string, newQuantity: number) => {
     if (newQuantity < 1) {
@@ -174,7 +176,17 @@ const CartSidebar = ({ open, onOpenChange }: CartSidebarProps) => {
                     })),
                     totals: { subtotal: subtotal, shipping: shipping, total: total },
                   }}
-                  onSuccess={() => {
+                  onSuccess={async () => {
+                    await createOrder({
+                      total_amount: total,
+                      items: state.items.map((i) => ({
+                        product_id: String(i.productId),
+                        quantity: i.quantity,
+                        price_at_time: i.product.price,
+                        size: i.selectedSize,
+                        color: i.selectedColor?.name,
+                      })),
+                    });
                     clearCart();
                     onOpenChange(false);
                   }}
