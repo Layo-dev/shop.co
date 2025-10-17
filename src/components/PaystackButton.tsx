@@ -39,7 +39,7 @@ const PaystackButton: React.FC<PaystackButtonProps> = ({
   currency = 'NGN',
   plan,
   quantity,
-  channels = ['card', 'bank', 'ussd', 'qr', 'mobile_money', 'bank_transfer'],
+  channels = ['card', 'bank', 'ussd', 'qr', 'mobile_money'],
   split_code,
   subaccount,
   transaction_charge,
@@ -60,7 +60,7 @@ const PaystackButton: React.FC<PaystackButtonProps> = ({
     amount: amount * 100, // Convert to kobo
     publicKey,
     currency,
-    channels: channels.length > 0 ? channels : ['card', 'bank', 'ussd', 'qr', 'mobile_money', 'bank_transfer'],
+    channels: channels.length > 0 ? channels : ['card', 'bank', 'ussd', 'qr', 'mobile_money'],
     metadata: {
       custom_fields: [
         {
@@ -75,11 +75,12 @@ const PaystackButton: React.FC<PaystackButtonProps> = ({
         })),
       ],
     },
+    // Only include optional parameters if they have valid values
     ...(plan && { plan }),
-    ...(quantity && { quantity }),
+    ...(quantity && quantity > 0 && { quantity }),
     ...(split_code && { split_code }),
     ...(subaccount && { subaccount }),
-    ...(transaction_charge && { transaction_charge }),
+    ...(transaction_charge && transaction_charge > 0 && { transaction_charge }),
     ...(bearer && { bearer }),
   };
 
@@ -132,41 +133,157 @@ const PaystackButton: React.FC<PaystackButtonProps> = ({
     // Add mobile body class to prevent scroll issues
     document.body.classList.add('paystack-open');
     
-    // Inject CSS fixes for Paystack modal on mobile
+    // Enhanced debugging and CSS injection for Paystack modal
     const injectPaystackCSS = () => {
+      // Remove any existing Paystack styles to avoid conflicts
+      const existingStyle = document.getElementById('paystack-mobile-fix');
+      if (existingStyle) {
+        existingStyle.remove();
+      }
+      
       const style = document.createElement('style');
+      style.id = 'paystack-mobile-fix';
       style.textContent = `
+        /* Paystack modal fixes */
+        .paystack-modal, 
+        [data-paystack-modal], 
+        .paystack-form,
+        .paystack-checkout,
+        .paystack-checkout-modal {
+          z-index: 9999 !important;
+        }
+        
         @media (max-width: 768px) {
-          .paystack-modal, [data-paystack-modal], .paystack-form {
-            z-index: 9999 !important;
+          .paystack-modal, 
+          [data-paystack-modal], 
+          .paystack-form,
+          .paystack-checkout,
+          .paystack-checkout-modal {
             position: fixed !important;
             top: 0 !important;
             left: 0 !important;
             width: 100vw !important;
             height: 100vh !important;
+            z-index: 9999 !important;
           }
-          .paystack-modal *, [data-paystack-modal] * {
+          
+          /* Ensure payment method buttons are clickable */
+          .paystack-modal button,
+          .paystack-modal .payment-method,
+          .paystack-modal [role="button"],
+          .paystack-modal .btn,
+          .paystack-modal input[type="button"],
+          .paystack-modal input[type="submit"] {
             touch-action: manipulation !important;
+            pointer-events: auto !important;
+            z-index: 10000 !important;
+            position: relative !important;
+          }
+          
+          /* Fix for payment method selection */
+          .paystack-modal .payment-option,
+          .paystack-modal .channel-option,
+          .paystack-modal .method-option {
+            touch-action: manipulation !important;
+            pointer-events: auto !important;
+            cursor: pointer !important;
           }
         }
       `;
       document.head.appendChild(style);
+      
+      console.log('Paystack mobile CSS injected');
     };
     
-    // Inject CSS after a short delay to ensure Paystack modal is loaded
+    // Inject CSS with multiple attempts to ensure it's applied
     setTimeout(injectPaystackCSS, 100);
+    setTimeout(injectPaystackCSS, 500);
+    setTimeout(injectPaystackCSS, 1000);
+    
+    // Add comprehensive debugging for Paystack modal
+    const addPaystackDebugging = () => {
+      // Wait for Paystack modal to be fully loaded
+      const checkForPaystackModal = () => {
+        const paystackModal = document.querySelector('.paystack-modal, [data-paystack-modal], .paystack-checkout, .paystack-form');
+        if (paystackModal) {
+          console.log('Paystack modal found:', paystackModal);
+          
+          // Add click event listeners to all buttons in the modal
+          const buttons = paystackModal.querySelectorAll('button, [role="button"], .btn, input[type="button"], input[type="submit"], .payment-method, .payment-option, .channel-option, .method-option');
+          console.log('Found buttons in Paystack modal:', buttons.length);
+          
+          buttons.forEach((button, index) => {
+            console.log(`Button ${index}:`, button);
+            
+            // Add click event listener for debugging
+            button.addEventListener('click', (e) => {
+              console.log('Button clicked:', button, e);
+            }, true);
+            
+            // Ensure button is clickable
+            const buttonElement = button as HTMLElement;
+            buttonElement.style.pointerEvents = 'auto';
+            buttonElement.style.touchAction = 'manipulation';
+            buttonElement.style.zIndex = '10000';
+            buttonElement.style.position = 'relative';
+          });
+          
+          // Add global click listener to catch any missed clicks
+          paystackModal.addEventListener('click', (e) => {
+            console.log('Click detected in Paystack modal:', e.target, e);
+          }, true);
+          
+          return true;
+        }
+        return false;
+      };
+      
+      // Check for modal with retries
+      let attempts = 0;
+      const maxAttempts = 20;
+      const checkInterval = setInterval(() => {
+        attempts++;
+        if (checkForPaystackModal() || attempts >= maxAttempts) {
+          clearInterval(checkInterval);
+          if (attempts >= maxAttempts) {
+            console.log('Paystack modal not found after', maxAttempts, 'attempts');
+          }
+        }
+      }, 200);
+    };
+    
+    // Start debugging after a delay
+    setTimeout(addPaystackDebugging, 500);
     
     try {
+      console.log('Attempting to initialize payment with config:', config);
       initializePayment({
         onSuccess: onSuccessCallback,
         onClose: onCloseCallback,
       });
     } catch (error) {
       console.error('Payment initialization error:', error);
-      setIsLoading(false);
-      // Remove mobile body class on error
-      document.body.classList.remove('paystack-open');
-      toast.error('Failed to initialize payment. Please try again.');
+      
+      // Try fallback approach without channels
+      try {
+        console.log('Trying fallback payment initialization without channels');
+        const fallbackConfig = {
+          ...config,
+          channels: ['card'] // Only card as fallback
+        };
+        
+        const fallbackInitializePayment = usePaystackPayment(fallbackConfig);
+        fallbackInitializePayment({
+          onSuccess: onSuccessCallback,
+          onClose: onCloseCallback,
+        });
+      } catch (fallbackError) {
+        console.error('Fallback payment initialization also failed:', fallbackError);
+        setIsLoading(false);
+        // Remove mobile body class on error
+        document.body.classList.remove('paystack-open');
+        toast.error('Failed to initialize payment. Please try again.');
+      }
     }
   };
 
