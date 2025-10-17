@@ -33,6 +33,15 @@ const CartSidebar = ({ open, onOpenChange }: CartSidebarProps) => {
   const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY as string | undefined;
   const customerEmail = user?.email || "";
 
+  // Debug logging
+  console.log('CartSidebar checkout state:', {
+    itemsCount: state.items.length,
+    hasPublicKey: !!publicKey,
+    hasEmail: !!customerEmail,
+    total: total,
+    publicKeyPrefix: publicKey ? publicKey.substring(0, 10) + '...' : 'undefined'
+  });
+
   // Remove USD/NGN conversion logic and Paystack amount calculation if not needed for display
   const checkoutDisabled = state.items.length === 0 || !publicKey || !customerEmail;
 
@@ -159,7 +168,7 @@ const CartSidebar = ({ open, onOpenChange }: CartSidebarProps) => {
                 
                 <PaystackButton
                   className="w-full glass-button"
-                  amount={total} // Paystack amount is in Naira
+                  amount={total} // Amount in Naira (will be converted to kobo in PaystackButton)
                   email={customerEmail}
                   publicKey={publicKey || ""}
                   currency="NGN"
