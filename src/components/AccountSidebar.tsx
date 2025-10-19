@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useOrders } from "@/hooks/useOrders";
 
 interface AccountSidebarProps {
   open: boolean;
@@ -12,11 +13,14 @@ interface AccountSidebarProps {
 }
 
 const AccountSidebar = ({ open, onOpenChange }: AccountSidebarProps) => {
-  const { user, loading, signOut } = useAuth();
+  const { user, loading: authLoading, signOut } = useAuth();
   const navigate = useNavigate();
+  const { orders, loading: ordersLoading } = useOrders();
+
+  const ordersCount = ordersLoading ? undefined : orders.length;
 
   const accountMenuItems = [
-    { icon: Package, label: "My Orders", count: 3, href: "/account/orders" },
+    { icon: Package, label: "My Orders", count: ordersCount, href: "/account/orders" },
     { icon: Heart, label: "Wishlist", count: 12, href: "/account/wishlist" },
     { icon: Gift, label: "Rewards & Offers", href: "/account" },
     { icon: Settings, label: "Account Settings", href: "/account" },
@@ -37,7 +41,7 @@ const AccountSidebar = ({ open, onOpenChange }: AccountSidebarProps) => {
     onOpenChange(false);
   };
 
-  if (loading) {
+  if (authLoading) {
     return (
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent className="w-full sm:max-w-md">
@@ -142,7 +146,7 @@ const AccountSidebar = ({ open, onOpenChange }: AccountSidebarProps) => {
               >
                 <item.icon className="w-5 h-5 mr-3" />
                 <span className="flex-1 text-left">{item.label}</span>
-                {item.count && (
+                {typeof item.count === "number" && item.count > 0 && (
                   <Badge variant="secondary" className="ml-auto">
                     {item.count}
                   </Badge>
