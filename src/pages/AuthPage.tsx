@@ -147,10 +147,11 @@ const AuthPage = () => {
       } else {
         toast({
           title: 'Account created successfully!',
-          description: 'Welcome to SHOP.CO! You can now sign in to your account.',
+          description: 'Let’s complete your profile to finish setup.',
         });
         signUpForm.reset();
         setIsSignUp(false);
+        navigate('/account/setup');
       }
     } catch (error: any) {
       toast({

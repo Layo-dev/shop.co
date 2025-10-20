@@ -21,6 +21,8 @@ import AccountPage from "./pages/AccountPage";
 import OrdersPage from "./pages/OrdersPage";
 import WishlistPage from "./pages/WishlistPage";
 import AdminPage from "./pages/AdminPage";
+import SetupProfilePage from "./pages/SetupProfilePage";
+import SettingsPage from "./pages/SettingsPage";
 import ProductManagementPage from "./pages/ProductManagementPage";
 
 const queryClient = new QueryClient();
@@ -44,6 +46,8 @@ const App = () => (
                 <Route path="/product/:id" element={<ProductDetailPage />} />
                 <Route path="/brands" element={<BrandsPage />} />
                 <Route path="/account" element={<AccountPage />} />
+                <Route path="/account/setup" element={<SetupProfilePage />} />
+                <Route path="/account/settings" element={<SettingsPage />} />
                 <Route path="/account/orders" element={<OrdersPage />} />
                 <Route path="/account/wishlist" element={<WishlistPage />} />
                 <Route path="/casual" element={<CategoryPage category="casual" />} />
