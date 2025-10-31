@@ -172,7 +172,7 @@ const OrdersPage = () => {
                           {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                         </Badge>
                         <span className="font-semibold">
-                          ${order.total_amount.toFixed(2)}
+                          ₦{order.total_amount.toLocaleString()}
                         </span>
                       </div>
                     </div>

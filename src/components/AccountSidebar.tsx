@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useOrders } from "@/hooks/useOrders";
+import { useWishlist } from "@/contexts/WishlistContext";
 
 interface AccountSidebarProps {
   open: boolean;
@@ -16,12 +17,14 @@ const AccountSidebar = ({ open, onOpenChange }: AccountSidebarProps) => {
   const { user, loading: authLoading, signOut } = useAuth();
   const navigate = useNavigate();
   const { orders, loading: ordersLoading } = useOrders();
+  const { wishlistItems, loading: wishlistLoading } = useWishlist();
 
   const ordersCount = ordersLoading ? undefined : orders.length;
+  const wishlistCount = wishlistLoading ? undefined : wishlistItems.length;
 
   const accountMenuItems = [
     { icon: Package, label: "My Orders", count: ordersCount, href: "/account/orders" },
-    { icon: Heart, label: "Wishlist", count: 12, href: "/account/wishlist" },
+    { icon: Heart, label: "Wishlist", count: wishlistCount, href: "/account/wishlist" },
     { icon: Gift, label: "Rewards & Offers", href: "/account" },
     { icon: Settings, label: "Account Settings", href: "/account" },
   ];

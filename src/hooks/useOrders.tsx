@@ -70,11 +70,11 @@ export const useOrders = () => {
 
       if (error) throw error;
       setOrders(data || []);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching orders:', error);
       toast({
         title: "Error",
-        description: "Failed to load orders",
+        description: error?.message || "Failed to load orders",
         variant: "destructive",
       });
     } finally {

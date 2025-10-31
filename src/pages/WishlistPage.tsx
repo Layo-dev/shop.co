@@ -8,11 +8,14 @@ import { ArrowLeft, Heart, Trash2, ShoppingCart } from 'lucide-react';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useCart } from '@/contexts/CartContext';
 import { products } from '@/data/products';
+import { useEffect, useMemo, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 const WishlistPage = () => {
   const { user, loading: authLoading } = useAuth();
   const { wishlistItems, loading: wishlistLoading, removeFromWishlist } = useWishlist();
   const { addItem } = useCart();
+  const [dbWishlistProducts, setDbWishlistProducts] = useState<any[]>([]);
 
   if (authLoading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
@@ -22,10 +25,44 @@ const WishlistPage = () => {
     return <Navigate to="/auth" replace />;
   }
 
-  const wishlistProducts = wishlistItems.map(item => {
-    const product = products.find(p => p.id.toString() === item.product_id);
-    return product ? { ...product, wishlistId: item.id } : null;
-  }).filter(Boolean);
+  // When signed in, fetch product details from Supabase using UUIDs.
+  useEffect(() => {
+    const fetchDbProducts = async () => {
+      if (!user) {
+        setDbWishlistProducts([]);
+        return;
+      }
+      const ids = wishlistItems.map(w => w.product_id).filter(Boolean);
+      if (ids.length === 0) {
+        setDbWishlistProducts([]);
+        return;
+      }
+      const { data } = await supabase
+        .from('products')
+        .select('*')
+        .in('id', ids);
+      setDbWishlistProducts(data || []);
+    };
+    fetchDbProducts();
+  }, [user, wishlistItems]);
+
+  // Build a unified list for UI: use DB products if signed in, else local catalog
+  const wishlistProducts = useMemo(() => {
+    if (user) {
+      return dbWishlistProducts.map(p => ({
+        id: p.id,
+        title: p.title,
+        image: p.image_url || '',
+        price: Number(p.price) || 0,
+        originalPrice: p.original_price ? Number(p.original_price) : undefined,
+        discount: p.discount || 0,
+      }));
+    }
+    return wishlistItems.map(item => {
+      const product = products.find(p => p.id.toString() === item.product_id);
+      return product ? { ...product } : null;
+    }).filter(Boolean) as any[];
+  }, [user, dbWishlistProducts, wishlistItems]);
 
   const handleAddToCart = (productId: number) => {
     const product = products.find(p => p.id === productId);
@@ -86,7 +123,7 @@ const WishlistPage = () => {
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-foreground mb-2">My Wishlist</h1>
             <p className="text-muted-foreground">
-              {wishlistProducts.length} item(s) saved for later
+              {wishlistItems.length} item(s) saved for later
             </p>
           </div>
 
@@ -127,11 +164,11 @@ const WishlistPage = () => {
                     
                     <div className="flex items-center gap-2 mb-4">
                       <span className="text-lg font-bold text-foreground">
-                        ${product.price}
+                        ₦{Number(product.price).toLocaleString()}
                       </span>
                       {product.originalPrice && (
                         <span className="text-sm text-muted-foreground line-through">
-                          ${product.originalPrice}
+                          ₦{Number(product.originalPrice).toLocaleString()}
                         </span>
                       )}
                     </div>
