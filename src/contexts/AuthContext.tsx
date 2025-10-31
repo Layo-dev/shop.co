@@ -9,6 +9,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<{ error?: any }>;
   signUp: (email: string, password: string, firstName?: string, lastName?: string) => Promise<{ error?: any }>;
   signOut: () => Promise<void>;
+  signInWithGoogle: () => Promise<{ error?: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -99,6 +100,35 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     window.location.href = '/';
   };
 
+  const signInWithGoogle = async () => {
+    try {
+      try {
+        await supabase.auth.signOut({ scope: 'global' });
+      } catch {}
+
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: import.meta.env.PROD
+            ? 'https://shopco-psi.vercel.app/'
+            : `${window.location.origin}/`,
+          queryParams: {
+            prompt: 'select_account',
+          },
+        },
+      });
+
+      console.log('Google OAuth response:', { data, error });
+      if (data?.url) {
+        window.location.assign(data.url);
+        return { error: undefined };
+      }
+      return { error };
+    } catch (error: any) {
+      return { error };
+    }
+  };
+
   const value = {
     user,
     session,
@@ -106,6 +136,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     signIn,
     signUp,
     signOut,
+    signInWithGoogle,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

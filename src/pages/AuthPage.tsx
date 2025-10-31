@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
+import GoogleIcon from '@/assets/google.png';
 import { useAuth } from '@/contexts/AuthContext';
 
 const signInSchema = z.object({
@@ -30,9 +31,10 @@ type SignUpFormData = z.infer<typeof signUpSchema>;
 const AuthPage = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { signIn, signUp, user } = useAuth();
+  const { signIn, signUp, user, signInWithGoogle } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -164,6 +166,28 @@ const AuthPage = () => {
     }
   };
 
+  const onGoogleSignIn = async () => {
+    setIsGoogleLoading(true);
+    try {
+      const { error } = await signInWithGoogle();
+      if (error) {
+        toast({
+          title: 'Google sign-in failed',
+          description: error.message || 'Please try again.',
+          variant: 'destructive',
+        });
+      }
+    } catch (err: any) {
+      toast({
+        title: 'An error occurred',
+        description: 'Please check your internet connection and try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsGoogleLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -191,6 +215,34 @@ const AuthPage = () => {
           </CardHeader>
           
           <CardContent className="space-y-6">
+            <div className="space-y-3">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                size="lg"
+                onClick={onGoogleSignIn}
+                disabled={isGoogleLoading}
+              >
+                {isGoogleLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Logging in with Google...
+                  </>
+                ) : (
+                  <>
+                    <img src={GoogleIcon} alt="Google icon" className="mr-2 h-4 w-4" />
+                    Login with Google
+                  </>
+                )}
+              </Button>
+
+              <div className="flex items-center gap-3">
+                <div className="h-px flex-1 bg-border" />
+                <span className="text-xs text-muted-foreground">or</span>
+                <div className="h-px flex-1 bg-border" />
+              </div>
+            </div>
             {isSignUp ? (
               <Form {...signUpForm} key="signup-form">
                 <form onSubmit={signUpForm.handleSubmit(onSignUp)} className="space-y-4">
