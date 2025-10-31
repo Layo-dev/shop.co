@@ -4,22 +4,22 @@ const BrowseByStyle = () => {
   const styles = [
     {
       title: "Casual",
-      image: "/placeholder.svg",
+      image: "/src/assets/Casual.jpeg",
       position: "top-left"
     },
     {
       title: "Formal", 
-      image: "/placeholder.svg",
+      image: "/src/assets/Formal.jpeg",
       position: "top-right"
     },
     {
       title: "Party",
-      image: "/placeholder.svg", 
+      image: "/src/assets/Party.jpeg", 
       position: "bottom-left"
     },
     {
       title: "Gym",
-      image: "/placeholder.svg",
+      image: "/src/assets/Gym.jpeg",
       position: "bottom-right"
     }
   ];

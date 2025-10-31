@@ -1,6 +1,8 @@
+import { Facebook, Instagram, Twitter, Youtube } from "lucide-react";
 import paypalBadge from "@/assets/badge-paypal.svg";
 import applePayBadge from "@/assets/badge-apple-pay.svg";
 import googlePayBadge from "@/assets/badge-google-pay.svg";
+import visaBadge from "@/assets/badge-visa.svg";
 
 const Footer = () => {
   const footerSections = [
@@ -23,7 +25,7 @@ const Footer = () => {
   ];
 
   const paymentMethods = [
-    { name: "Visa", type: "text" },
+    { name: "Visa", type: "svg", src: visaBadge },
     { name: "Mastercard", type: "text" },
     { name: "PayPal", type: "svg", src: paypalBadge },
     { name: "Apple Pay", type: "svg", src: applePayBadge },
@@ -41,19 +43,23 @@ const Footer = () => {
               We have clothes that suits your style and which you're proud to wear. From women to men.
             </p>
             <div className="flex space-x-4">
-              {/* Social media icons */}
-              <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center cursor-pointer hover:bg-primary/20 transition-colors">
-                <span className="text-sm font-bold">T</span>
-              </div>
-              <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center cursor-pointer hover:bg-primary/20 transition-colors">
-                <span className="text-sm font-bold">F</span>
-              </div>
-              <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center cursor-pointer hover:bg-primary/20 transition-colors">
-                <span className="text-sm font-bold">I</span>
-              </div>
-              <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center cursor-pointer hover:bg-primary/20 transition-colors">
-                <span className="text-sm font-bold">G</span>
-              </div>
+              {[
+                { href: "https://twitter.com/yourhandle", label: "Twitter", Icon: Twitter },
+                { href: "https://facebook.com/yourpage", label: "Facebook", Icon: Facebook },
+                { href: "https://instagram.com/yourhandle", label: "Instagram", Icon: Instagram },
+                { href: "https://youtube.com/@yourchannel", label: "YouTube", Icon: Youtube },
+              ].map(({ href, label, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                 aria-label={label}
+                 target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center hover:bg-primary/20 transition-colors"
+                >
+                  <Icon className="h-5 w-5 text-foreground" />
+                </a>
+             ))}
             </div>
           </div>
 
@@ -88,7 +94,7 @@ const Footer = () => {
                     key={index} 
                     src={method.src} 
                     alt={method.name}
-                    className="h-8 object-contain"
+                     className="h-10 sm:h-12 object-contain"
                   />
                 ) : (
                   <div key={index} className="glass-card rounded-lg p-2 text-xs font-semibold min-w-[50px] text-center">
