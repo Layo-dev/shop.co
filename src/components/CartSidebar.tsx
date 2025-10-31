@@ -326,6 +326,7 @@ const CartSidebar = ({ open, onOpenChange }: CartSidebarProps) => {
                     })),
                     totals: { subtotal: subtotal, shipping: shipping, total: total },
                   }}
+                  onBeforeOpen={() => onOpenChange(false)}
                   onSuccess={async () => {
                     try {
                       if (!selectedAddressId) {

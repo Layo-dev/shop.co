@@ -12,6 +12,7 @@ interface PaystackButtonProps {
   publicKey: string;
   onSuccess?: (reference: string) => void;
   onClose?: () => void;
+  onBeforeOpen?: () => void;
   disabled?: boolean;
   className?: string;
   children?: React.ReactNode;
@@ -32,6 +33,7 @@ const PaystackButton: React.FC<PaystackButtonProps> = ({
   publicKey,
   onSuccess,
   onClose,
+  onBeforeOpen,
   disabled = false,
   className = '',
   children,
@@ -122,10 +124,14 @@ const PaystackButton: React.FC<PaystackButtonProps> = ({
     document.body.classList.add('paystack-open');
 
     try {
-      initializePayment({
-        onSuccess: onSuccessCallback,
-        onClose: onCloseCallback,
-      });
+      // Allow parent (e.g., Sheet) to close before Paystack mounts its overlay
+      onBeforeOpen?.();
+      setTimeout(() => {
+        initializePayment({
+          onSuccess: onSuccessCallback,
+          onClose: onCloseCallback,
+        });
+      }, 100);
     } catch (error) {
       setIsLoading(false);
       document.body.classList.remove('paystack-open');
