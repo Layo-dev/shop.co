@@ -2,10 +2,17 @@ import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Package, Settings, Users, BarChart } from 'lucide-react';
+import { Package, Settings, Users, BarChart, ShoppingBag } from 'lucide-react';
 
 const AdminPage = () => {
   const adminCards = [
+    {
+      title: 'Orders Management',
+      description: 'View and manage customer orders',
+      icon: ShoppingBag,
+      link: '/admin/orders',
+      color: 'text-indigo-500'
+    },
     {
       title: 'Product Management',
       description: 'Add, edit, and manage your product catalog',

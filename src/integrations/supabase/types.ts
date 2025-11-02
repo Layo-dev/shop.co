@@ -172,9 +172,16 @@ export type Database = {
           billing_address: Json | null
           created_at: string
           id: string
+          notes: string | null
+          payment_method: string | null
+          payment_status: Database["public"]["Enums"]["payment_status"] | null
+          refund_amount: number | null
+          refund_reason: string | null
           shipping_address: Json | null
+          shipping_carrier: string | null
           status: Database["public"]["Enums"]["order_status"]
           total_amount: number
+          tracking_number: string | null
           updated_at: string
           user_id: string
         }
@@ -183,9 +190,16 @@ export type Database = {
           billing_address?: Json | null
           created_at?: string
           id?: string
+          notes?: string | null
+          payment_method?: string | null
+          payment_status?: Database["public"]["Enums"]["payment_status"] | null
+          refund_amount?: number | null
+          refund_reason?: string | null
           shipping_address?: Json | null
+          shipping_carrier?: string | null
           status?: Database["public"]["Enums"]["order_status"]
           total_amount: number
+          tracking_number?: string | null
           updated_at?: string
           user_id: string
         }
@@ -194,9 +208,16 @@ export type Database = {
           billing_address?: Json | null
           created_at?: string
           id?: string
+          notes?: string | null
+          payment_method?: string | null
+          payment_status?: Database["public"]["Enums"]["payment_status"] | null
+          refund_amount?: number | null
+          refund_reason?: string | null
           shipping_address?: Json | null
+          shipping_carrier?: string | null
           status?: Database["public"]["Enums"]["order_status"]
           total_amount?: number
+          tracking_number?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -442,6 +463,12 @@ export type Database = {
         | "delivered"
         | "cancelled"
         | "refunded"
+      payment_status:
+        | "pending"
+        | "paid"
+        | "failed"
+        | "refunded"
+        | "partially_refunded"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -578,6 +605,13 @@ export const Constants = {
         "delivered",
         "cancelled",
         "refunded",
+      ],
+      payment_status: [
+        "pending",
+        "paid",
+        "failed",
+        "refunded",
+        "partially_refunded",
       ],
     },
   },

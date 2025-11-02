@@ -21,6 +21,7 @@ import AccountPage from "./pages/AccountPage";
 import OrdersPage from "./pages/OrdersPage";
 import WishlistPage from "./pages/WishlistPage";
 import AdminPage from "./pages/AdminPage";
+import AdminOrdersPage from "./pages/AdminOrdersPage";
 import SetupProfilePage from "./pages/SetupProfilePage";
 import SettingsPage from "./pages/SettingsPage";
 import ProductManagementPage from "./pages/ProductManagementPage";
@@ -54,8 +55,9 @@ const App = () => (
                 <Route path="/formal" element={<CategoryPage category="formal" />} />
                 <Route path="/party" element={<CategoryPage category="party" />} />
                 <Route path="/gym" element={<CategoryPage category="gym" />} />
-                <Route path="/admin" element={<AdminRoute><AdminPage /></AdminRoute>} />
-                <Route path="/admin/products" element={<AdminRoute><ProductManagementPage /></AdminRoute>} />
+              <Route path="/admin" element={<AdminRoute><AdminPage /></AdminRoute>} />
+              <Route path="/admin/orders" element={<AdminRoute><AdminOrdersPage /></AdminRoute>} />
+              <Route path="/admin/products" element={<AdminRoute><ProductManagementPage /></AdminRoute>} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
