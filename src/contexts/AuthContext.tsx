@@ -64,7 +64,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       password,
     });
 
-    console.log('Sign in response:', { data, error });
     return { error };
   };
 
@@ -90,7 +89,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       }
     });
 
-    console.log('Sign up response:', { data, error });
     return { error };
   };
 
@@ -118,7 +116,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         },
       });
 
-      console.log('Google OAuth response:', { data, error });
       if (data?.url) {
         window.location.assign(data.url);
         return { error: undefined };

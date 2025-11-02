@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      addresses: {
+        Row: {
+          address_line: string
+          city: string
+          country: string
+          created_at: string
+          id: string
+          is_default: boolean | null
+          postal_code: string | null
+          state: string
+          user_id: string
+        }
+        Insert: {
+          address_line: string
+          city: string
+          country: string
+          created_at?: string
+          id?: string
+          is_default?: boolean | null
+          postal_code?: string | null
+          state: string
+          user_id: string
+        }
+        Update: {
+          address_line?: string
+          city?: string
+          country?: string
+          created_at?: string
+          id?: string
+          is_default?: boolean | null
+          postal_code?: string | null
+          state?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       cart_items: {
         Row: {
           added_at: string
@@ -132,6 +168,7 @@ export type Database = {
       }
       orders: {
         Row: {
+          address_id: string | null
           billing_address: Json | null
           created_at: string
           id: string
@@ -142,6 +179,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          address_id?: string | null
           billing_address?: Json | null
           created_at?: string
           id?: string
@@ -152,6 +190,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          address_id?: string | null
           billing_address?: Json | null
           created_at?: string
           id?: string
@@ -161,7 +200,15 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "orders_address_id_fkey"
+            columns: ["address_id"]
+            isOneToOne: false
+            referencedRelation: "addresses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       products: {
         Row: {
@@ -274,6 +321,7 @@ export type Database = {
           billing_address: Json | null
           created_at: string
           first_name: string | null
+          gender: string | null
           id: string
           last_login: string | null
           last_name: string | null
@@ -291,6 +339,7 @@ export type Database = {
           billing_address?: Json | null
           created_at?: string
           first_name?: string | null
+          gender?: string | null
           id?: string
           last_login?: string | null
           last_name?: string | null
@@ -308,6 +357,7 @@ export type Database = {
           billing_address?: Json | null
           created_at?: string
           first_name?: string | null
+          gender?: string | null
           id?: string
           last_login?: string | null
           last_name?: string | null
@@ -380,10 +430,7 @@ export type Database = {
         }
         Returns: boolean
       }
-      update_last_login: {
-        Args: { user_uuid: string }
-        Returns: undefined
-      }
+      update_last_login: { Args: { user_uuid: string }; Returns: undefined }
     }
     Enums: {
       app_role: "customer" | "admin" | "moderator"
