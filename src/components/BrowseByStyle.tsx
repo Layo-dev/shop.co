@@ -1,25 +1,29 @@
 import { Link } from "react-router-dom";
+import casualImage from "@/assets/Casual.jpeg";
+import formalImage from "@/assets/Formal.jpeg";
+import partyImage from "@/assets/Party.jpeg";
+import gymImage from "@/assets/Gym.jpeg";
 
 const BrowseByStyle = () => {
   const styles = [
     {
       title: "Casual",
-      image: "/src/assets/Casual.jpeg",
+      image: casualImage,
       position: "top-left"
     },
     {
       title: "Formal", 
-      image: "/src/assets/Formal.jpeg",
+      image: formalImage,
       position: "top-right"
     },
     {
       title: "Party",
-      image: "/src/assets/Party.jpeg", 
+      image: partyImage, 
       position: "bottom-left"
     },
     {
       title: "Gym",
-      image: "/src/assets/Gym.jpeg",
+      image: gymImage,
       position: "bottom-right"
     }
   ];
