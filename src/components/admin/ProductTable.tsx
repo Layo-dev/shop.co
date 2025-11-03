@@ -106,7 +106,10 @@ export const ProductTable = ({ products, onEdit, onDelete }: ProductTableProps) 
                     {product.shipping_fee ? `₦${product.shipping_fee.toLocaleString()}` : '-'}
                   </TableCell>
                   <TableCell>
-                    <Badge variant={product.in_stock ? "default" : "secondary"}>
+                    <Badge 
+                      variant={product.in_stock ? "default" : "secondary"}
+                      className={product.in_stock ? "bg-green-100 text-green-700 hover:bg-green-200 border-green-300" : ""}
+                    >
                       {product.in_stock ? 'In Stock' : 'Out of Stock'}
                     </Badge>
                   </TableCell>
@@ -114,19 +117,19 @@ export const ProductTable = ({ products, onEdit, onDelete }: ProductTableProps) 
                     <div className="flex items-center justify-end gap-2">
                       <Button 
                         variant="outline" 
-                        size="sm"
+                        size="icon"
+                        className="border-gray-300 hover:bg-gray-50"
                         onClick={() => onEdit(product)}
                       >
-                        <Edit className="h-4 w-4 mr-1" />
-                        Edit
+                        <Edit className="h-4 w-4 text-gray-900" />
                       </Button>
                       <Button 
-                        variant="destructive" 
-                        size="sm"
+                        variant="outline" 
+                        size="icon"
+                        className="border-red-300 hover:bg-red-50"
                         onClick={() => setDeleteId(product.id)}
                       >
-                        <Trash2 className="h-4 w-4 mr-1" />
-                        Delete
+                        <Trash2 className="h-4 w-4 text-red-600" />
                       </Button>
                     </div>
                   </TableCell>
