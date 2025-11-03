@@ -58,10 +58,10 @@ export const RefundDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="w-[95vw] sm:w-full sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Process Refund</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-base sm:text-lg">Process Refund</DialogTitle>
+          <DialogDescription className="text-sm">
             Enter the refund amount and reason for this order.
           </DialogDescription>
         </DialogHeader>
@@ -128,8 +128,8 @@ export const RefundDialog = ({
           </div>
         )}
 
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+        <DialogFooter className="flex-col sm:flex-row gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)} className="w-full sm:w-auto">
             Cancel
           </Button>
           <Button
@@ -141,6 +141,7 @@ export const RefundDialog = ({
               parseFloat(amount) <= 0 ||
               parseFloat(amount) > refundableAmount
             }
+            className="w-full sm:w-auto"
           >
             {loading ? 'Processing...' : 'Process Refund'}
           </Button>
