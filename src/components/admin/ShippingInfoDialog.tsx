@@ -62,10 +62,10 @@ export const ShippingInfoDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw] sm:w-full sm:max-w-md">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-base sm:text-lg">Add Shipping Information</DialogTitle>
-          <DialogDescription className="text-sm">
+          <DialogTitle>Add Shipping Information</DialogTitle>
+          <DialogDescription>
             Enter the shipping carrier and tracking number for this order.
           </DialogDescription>
         </DialogHeader>
@@ -98,14 +98,13 @@ export const ShippingInfoDialog = ({
           </div>
         </div>
 
-        <DialogFooter className="flex-col sm:flex-row gap-2">
-          <Button variant="outline" onClick={() => onOpenChange(false)} className="w-full sm:w-auto">
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
           <Button
             onClick={handleSubmit}
             disabled={!carrier || !trackingNumber || loading}
-            className="w-full sm:w-auto"
           >
             {loading ? 'Saving...' : 'Save Shipping Info'}
           </Button>

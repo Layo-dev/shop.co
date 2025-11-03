@@ -15,7 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { MoreVertical, Eye, Truck, CheckCircle } from 'lucide-react';
+import { MoreHorizontal, Eye, Truck, CheckCircle } from 'lucide-react';
 import { AdminOrder } from '@/hooks/useAdminOrders';
 import {
   formatOrderNumber,
@@ -24,14 +24,11 @@ import {
   getPaymentStatusColor,
   formatOrderStatus,
   formatPaymentStatus,
-  formatDate,
 } from '@/lib/orderUtils';
 import { OrderStatusDropdown } from './OrderStatusDropdown';
 import { ShippingInfoDialog } from './ShippingInfoDialog';
 import { RefundDialog } from './RefundDialog';
-import { MobileOrderCard } from './MobileOrderCard';
 import { OrderDetailsModal } from './OrderDetailsModal';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 interface OrdersTableProps {
   orders: AdminOrder[];
@@ -46,7 +43,6 @@ export const OrdersTable = ({
   onAddShipping,
   onRefund,
 }: OrdersTableProps) => {
-  const isMobile = useIsMobile();
   const [selectedOrder, setSelectedOrder] = useState<AdminOrder | null>(null);
   const [shippingDialogOpen, setShippingDialogOpen] = useState(false);
   const [refundDialogOpen, setRefundDialogOpen] = useState(false);
@@ -74,134 +70,136 @@ export const OrdersTable = ({
 
   return (
     <>
-      {isMobile ? (
-        <div className="space-y-3">
-          {orders.map((order) => (
-            <MobileOrderCard
-              key={order.id}
-              order={order}
-              onViewDetails={handleViewDetails}
-              onMarkShipped={handleMarkShipped}
-              onMarkDelivered={handleMarkDelivered}
-              onRefund={handleRefund}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="rounded-md border overflow-x-auto">
-          <Table>
-            <TableHeader>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Order #</TableHead>
+              <TableHead>Customer</TableHead>
+              <TableHead className="text-center">Items</TableHead>
+              <TableHead>Total</TableHead>
+              <TableHead>Payment</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Shipping</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {orders.length === 0 ? (
               <TableRow>
-                <TableHead>Order #</TableHead>
-                <TableHead>Customer</TableHead>
-                <TableHead>Items</TableHead>
-                <TableHead>Total</TableHead>
-                <TableHead>Payment</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="hidden lg:table-cell">Shipping</TableHead>
-                <TableHead className="hidden lg:table-cell">Date</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableCell colSpan={9} className="text-center text-muted-foreground">
+                  No orders found
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {orders.map((order) => {
-                const canShip = order.status === 'pending' || order.status === 'processing';
-                const canDeliver = order.status === 'shipped';
-
-                return (
-                  <TableRow key={order.id}>
-                    <TableCell className="font-medium">
-                      <Button 
-                        variant="link" 
-                        className="p-0 h-auto"
-                        onClick={() => handleViewDetails(order)}
-                      >
-                        {formatOrderNumber(order.id)}
-                      </Button>
-                    </TableCell>
-                    <TableCell>
-                      <div>
-                        <p className="font-medium">{order.customer_name}</p>
-                        <p className="text-sm text-muted-foreground">{order.customer_email}</p>
+            ) : (
+              orders.map((order) => (
+                <TableRow key={order.id}>
+                  <TableCell>
+                    <Button
+                      variant="link"
+                      className="p-0 h-auto font-mono text-sm"
+                      onClick={() => handleViewDetails(order)}
+                    >
+                      {formatOrderNumber(order.id)}
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <div className="space-y-1">
+                      <p className="font-medium">{order.customer_name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {order.customer_email}
+                      </p>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-center">{order.items_count}</TableCell>
+                  <TableCell className="font-medium">
+                    {formatCurrency(order.total_amount)}
+                  </TableCell>
+                  <TableCell>
+                    <Badge className={getPaymentStatusColor(order.payment_status)}>
+                      {formatPaymentStatus(order.payment_status)}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <OrderStatusDropdown
+                      currentStatus={order.status}
+                      orderId={order.id}
+                      onStatusChange={onStatusChange}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    {order.shipping_carrier && order.tracking_number ? (
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium">{order.shipping_carrier}</p>
+                        <p className="text-xs text-muted-foreground font-mono">
+                          {order.tracking_number}
+                        </p>
                       </div>
-                    </TableCell>
-                    <TableCell>{order.order_items?.length || 0}</TableCell>
-                    <TableCell className="font-semibold">{formatCurrency(order.total_amount)}</TableCell>
-                    <TableCell>
-                      <Badge variant={order.payment_status === 'paid' ? 'default' : 'secondary'}>
-                        {formatPaymentStatus(order.payment_status)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <OrderStatusDropdown
-                        currentStatus={order.status}
-                        orderId={order.id}
-                        onStatusChange={onStatusChange}
-                      />
-                    </TableCell>
-                    <TableCell className="hidden lg:table-cell">
-                      {order.tracking_number ? (
-                        <div>
-                          <p className="text-sm font-medium">{order.shipping_carrier}</p>
-                          <p className="text-xs text-muted-foreground">{order.tracking_number}</p>
-                        </div>
-                      ) : (
-                        <span className="text-muted-foreground">-</span>
-                      )}
-                    </TableCell>
-                    <TableCell className="hidden lg:table-cell">{formatDate(order.created_at)}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-2">
+                    ) : (
+                      <span className="text-sm text-muted-foreground">Not shipped</span>
+                    )}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {new Date(order.created_at).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      {/* Quick Actions */}
+                      {order.status === 'processing' && (
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleViewDetails(order)}
+                          onClick={() => handleMarkShipped(order)}
+                          title="Mark as Shipped"
                         >
-                          <Eye className="h-4 w-4" />
+                          <Truck className="h-4 w-4" />
                         </Button>
-                        {canShip && (
-                          <Button
-                            size="sm"
-                            onClick={() => handleMarkShipped(order)}
-                          >
-                            Mark Shipped
+                      )}
+                      {order.status === 'shipped' && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleMarkDelivered(order.id)}
+                          title="Mark as Delivered"
+                        >
+                          <CheckCircle className="h-4 w-4" />
+                        </Button>
+                      )}
+
+                      {/* More Actions Menu */}
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm">
+                            <MoreHorizontal className="h-4 w-4" />
                           </Button>
-                        )}
-                        {canDeliver && (
-                          <Button
-                            size="sm"
-                            onClick={() => handleMarkDelivered(order.id)}
-                          >
-                            Mark Delivered
-                          </Button>
-                        )}
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleViewDetails(order)}>
-                              View Details
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleMarkShipped(order)}>
-                              Add Shipping Info
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleRefund(order)}>
-                              Refund Order
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </div>
-      )}
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => handleViewDetails(order)}>
+                            <Eye className="mr-2 h-4 w-4" />
+                            View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleMarkShipped(order)}>
+                            <Truck className="mr-2 h-4 w-4" />
+                            Add Shipping Info
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleRefund(order)}>
+                            Refund Order
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
 
       <ShippingInfoDialog
         open={shippingDialogOpen}

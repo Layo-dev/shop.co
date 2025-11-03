@@ -107,15 +107,15 @@ export const OrderDetailsModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full">
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-base sm:text-lg">
+          <DialogTitle className="flex items-center gap-2">
             Order {formatOrderNumber(order.id)}
             <Badge className={getOrderStatusColor(order.status)}>
               {formatOrderStatus(order.status)}
             </Badge>
           </DialogTitle>
-          <DialogDescription className="text-sm">
+          <DialogDescription>
             Created on {new Date(order.created_at).toLocaleString('en-US', {
               dateStyle: 'long',
               timeStyle: 'short',
@@ -126,10 +126,10 @@ export const OrderDetailsModal = ({
         <div className="space-y-6">
           {/* Customer Information */}
           <div>
-            <h3 className="font-semibold mb-2 text-sm sm:text-base">Customer Information</h3>
+            <h3 className="font-semibold mb-2">Customer Information</h3>
             <div className="space-y-1 text-sm">
               <p><strong>Name:</strong> {order.customer_name}</p>
-              <p className="break-all"><strong>Email:</strong> {order.customer_email}</p>
+              <p><strong>Email:</strong> {order.customer_email}</p>
             </div>
           </div>
 
@@ -137,7 +137,7 @@ export const OrderDetailsModal = ({
 
           {/* Payment Information */}
           <div>
-            <h3 className="font-semibold mb-2 text-sm sm:text-base">Payment Information</h3>
+            <h3 className="font-semibold mb-2">Payment Information</h3>
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <span className="text-sm">Status:</span>
@@ -163,7 +163,7 @@ export const OrderDetailsModal = ({
 
           {/* Shipping Information */}
           <div>
-            <h3 className="font-semibold mb-2 text-sm sm:text-base">Shipping Information</h3>
+            <h3 className="font-semibold mb-2">Shipping Information</h3>
             {order.shipping_carrier && order.tracking_number ? (
               <div className="space-y-1 text-sm">
                 <p><strong>Carrier:</strong> {order.shipping_carrier}</p>
@@ -187,27 +187,27 @@ export const OrderDetailsModal = ({
 
           {/* Order Items */}
           <div>
-            <h3 className="font-semibold mb-3 text-sm sm:text-base">Order Items</h3>
+            <h3 className="font-semibold mb-3">Order Items</h3>
             <div className="space-y-3">
               {orderItems.map((item) => (
-                <div key={item.id} className="flex flex-col sm:flex-row gap-3 p-3 border rounded-lg">
+                <div key={item.id} className="flex gap-3 p-3 border rounded-lg">
                   {item.products?.images && (
                     <img
                       src={getImageUrl(item.products.images)}
                       alt={item.products.title}
-                      className="w-full sm:w-16 h-40 sm:h-16 object-cover rounded"
+                      className="w-16 h-16 object-cover rounded"
                     />
                   )}
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-sm sm:text-base">{item.products?.title || 'Product'}</p>
-                    <p className="text-xs sm:text-sm text-muted-foreground">
+                  <div className="flex-1">
+                    <p className="font-medium">{item.products?.title || 'Product'}</p>
+                    <p className="text-sm text-muted-foreground">
                       Quantity: {item.quantity} × {formatCurrency(item.price_at_time)}
                     </p>
                     {item.size && <p className="text-xs text-muted-foreground">Size: {item.size}</p>}
                     {item.color && <p className="text-xs text-muted-foreground">Color: {item.color}</p>}
                   </div>
                   <div className="text-right">
-                    <p className="font-medium text-sm sm:text-base">
+                    <p className="font-medium">
                       {formatCurrency(item.quantity * item.price_at_time)}
                     </p>
                   </div>

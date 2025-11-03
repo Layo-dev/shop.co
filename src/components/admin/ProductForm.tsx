@@ -160,7 +160,7 @@ export const ProductForm = ({ onSuccess, onCancel, initialData }: ProductFormPro
           )}
         />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
             name="category"
@@ -199,7 +199,7 @@ export const ProductForm = ({ onSuccess, onCancel, initialData }: ProductFormPro
           />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           <FormField
             control={form.control}
             name="price"
@@ -271,6 +271,15 @@ export const ProductForm = ({ onSuccess, onCancel, initialData }: ProductFormPro
           )}
         />
 
+        <div className="flex gap-4">
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Saving...' : initialData ? 'Update Product' : 'Create Product'}
+          </Button>
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+        </div>
+
         <FormField
           control={form.control}
           name="sizes"
@@ -283,7 +292,6 @@ export const ProductForm = ({ onSuccess, onCancel, initialData }: ProductFormPro
                     key={size}
                     type="button"
                     variant={field.value.includes(size) ? 'default' : 'outline'}
-                    className="min-w-[44px] min-h-[44px]"
                     onClick={() => {
                       if (field.value.includes(size)) {
                         field.onChange(field.value.filter((s: string) => s !== size));
@@ -300,15 +308,6 @@ export const ProductForm = ({ onSuccess, onCancel, initialData }: ProductFormPro
             </FormItem>
           )}
         />
-
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-          <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
-            {isSubmitting ? 'Saving...' : initialData ? 'Update Product' : 'Create Product'}
-          </Button>
-          <Button type="button" variant="outline" onClick={onCancel} className="w-full sm:w-auto">
-            Cancel
-          </Button>
-        </div>
 
         <FormField
           control={form.control}

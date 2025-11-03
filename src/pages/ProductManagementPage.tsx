@@ -59,11 +59,11 @@ const ProductManagementPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col overflow-x-hidden">
+    <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1 py-6 sm:py-8 lg:py-12 px-4 sm:px-6 lg:px-8 w-full max-w-full">
-        <div className="max-w-7xl mx-auto w-full">
-          <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <main className="flex-1 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-6 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link to="/admin">
                 <Button variant="ghost" size="icon">
@@ -71,11 +71,11 @@ const ProductManagementPage = () => {
                 </Button>
               </Link>
               <div>
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">Product Management</h1>
-                <p className="text-muted-foreground text-sm sm:text-base">Manage your product catalog</p>
+                <h1 className="text-4xl font-bold">Product Management</h1>
+                <p className="text-muted-foreground">Manage your product catalog</p>
               </div>
             </div>
-            <Button onClick={handleAdd} className="w-full sm:w-auto">
+            <Button onClick={handleAdd}>
               <Plus className="mr-2 h-4 w-4" />
               Add Product
             </Button>
@@ -107,9 +107,9 @@ const ProductManagementPage = () => {
       <Footer />
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-lg sm:text-xl">
+            <DialogTitle>
               {editingProduct ? 'Edit Product' : 'Add New Product'}
             </DialogTitle>
           </DialogHeader>
