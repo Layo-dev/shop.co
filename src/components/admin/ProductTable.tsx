@@ -116,20 +116,20 @@ export const ProductTable = ({ products, onEdit, onDelete }: ProductTableProps) 
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">
                       <Button 
-                        variant="outline" 
+                        variant="ghost" 
                         size="icon"
-                        className="border-gray-300 hover:bg-gray-50"
+                        className="hover:bg-gray-50"
                         onClick={() => onEdit(product)}
                       >
-                        <Edit className="h-4 w-4 text-gray-900" />
+                        <Edit className="h-4 w-4 text-gray-900" strokeWidth={2} />
                       </Button>
                       <Button 
-                        variant="outline" 
+                        variant="ghost" 
                         size="icon"
-                        className="border-red-300 hover:bg-red-50"
+                        className="hover:bg-red-50"
                         onClick={() => setDeleteId(product.id)}
                       >
-                        <Trash2 className="h-4 w-4 text-red-600" />
+                        <Trash2 className="h-4 w-4 text-red-600" strokeWidth={2} />
                       </Button>
                     </div>
                   </TableCell>
