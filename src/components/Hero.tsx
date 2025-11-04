@@ -23,6 +23,7 @@ const Hero = () => {
               </p>
             </div>
 
+            <br />
             <Link to="/shop">
               <Button variant="hero" size="xl" className="w-full sm:w-auto">
                 Shop Now
