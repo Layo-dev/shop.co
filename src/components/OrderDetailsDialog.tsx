@@ -126,7 +126,7 @@ export const OrderDetailsDialog = ({ order, open, onOpenChange }: OrderDetailsDi
           {/* Total */}
           <div className="flex justify-between items-center">
             <span className="text-lg font-semibold">Total Amount</span>
-            <span className="text-2xl font-bold">${Number(order.total_amount).toFixed(2)}</span>
+            <span className="text-2xl font-bold">{new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(Number(order.total_amount))}</span>
           </div>
         </div>
       </DialogContent>
