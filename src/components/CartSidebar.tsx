@@ -327,10 +327,15 @@ const CartSidebar = ({ open, onOpenChange }: CartSidebarProps) => {
                     totals: { subtotal: subtotal, shipping: shipping, total: total },
                   }}
                   onBeforeOpen={() => onOpenChange(false)}
-                  onSuccess={async () => {
+                  onSuccess={async (reference: string) => {
                     try {
                       if (!selectedAddressId) {
                         console.error('No address selected');
+                        toast({ 
+                          title: "Order creation failed", 
+                          description: "No shipping address selected. Please select an address and try again.", 
+                          variant: "destructive" 
+                        });
                         return;
                       }
                       // Call edge function to create order with address_id
@@ -348,17 +353,27 @@ const CartSidebar = ({ open, onOpenChange }: CartSidebarProps) => {
                       const { data, error } = await supabase.functions.invoke('create-order', { body: payload });
                       if (error) {
                         console.error('Edge function error:', error);
-                        toast({ title: "Order failed", description: error.message || "Please try again.", variant: "destructive" });
+                        toast({ 
+                          title: "Order creation failed", 
+                          description: `Payment received but order creation failed. Transaction reference: ${reference}. Please contact support.`, 
+                          variant: "destructive" 
+                        });
                         return;
                       }
-                      console.log('Order created via edge function:', data);
+                      console.log('Order created successfully:', data);
                       clearCart();
                       onOpenChange(false);
-                      toast({ title: "Order placed", description: "Your order has been created successfully." });
+                      toast({ 
+                        title: "Order placed successfully!", 
+                        description: `Your order #${data.order_id.slice(0, 8)} has been created.` 
+                      });
                     } catch (err) {
                       console.error('Order creation failed:', err);
-                      // Optionally show toast
-                      toast({ title: "Order failed", description: "Please try again.", variant: "destructive" });
+                      toast({ 
+                        title: "Order failed", 
+                        description: "An unexpected error occurred. Please contact support.", 
+                        variant: "destructive" 
+                      });
                     }
                   }}
                   onClose={() => {}}
