@@ -10,6 +10,7 @@ import ProductInfo from "@/components/ProductInfo";
 import ProductTabs from "@/components/ProductTabs";
 import RelatedProducts from "@/components/RelatedProducts";
 import { Skeleton } from "@/components/ui/skeleton";
+import SEO from "@/components/SEO";
 
 const ProductDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -84,8 +85,67 @@ const ProductDetailPage = () => {
     care: product.care ? (typeof product.care === 'string' ? [product.care] : product.care) : []
   };
 
+  // Product structured data for SEO
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": product.title,
+    "image": enhancedProduct.images,
+    "description": product.description || `${product.title} - Premium quality fashion item from Shop.co`,
+    "brand": {
+      "@type": "Brand",
+      "name": product.brand || "Shop.co"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": enhancedProduct.price,
+      "priceCurrency": "NGN",
+      "availability": enhancedProduct.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      "url": `https://shop-co-zn5p.lovable.app/product/${product.id}`
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": enhancedProduct.rating || 4.5,
+      "reviewCount": product.reviews_count || 0
+    }
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://shop-co-zn5p.lovable.app/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": product.category,
+        "item": `https://shop-co-zn5p.lovable.app/${product.category.toLowerCase()}`
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": product.title,
+        "item": `https://shop-co-zn5p.lovable.app/product/${product.id}`
+      }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-background">
+      <SEO 
+        title={product.title}
+        description={product.description || `${product.title} - Premium quality fashion item from Shop.co. Available now at ₦${enhancedProduct.price.toLocaleString()}`}
+        canonical={`https://shop-co-zn5p.lovable.app/product/${product.id}`}
+        image={enhancedProduct.images[0]}
+        type="product"
+        keywords={`${product.title}, ${product.category}, fashion, clothing, ${product.brand || 'Shop.co'}, buy online`}
+        structuredData={[productSchema, breadcrumbSchema]}
+      />
       <Header />
       
       <main className="py-8">
