@@ -12,5 +12,3 @@ Allow: /
 
 User-agent: *
 Allow: /
-
-Sitemap: https://shop-co-zn5p.lovable.app/sitemap.xml
