@@ -197,7 +197,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       <div className="glass-card rounded-xl p-4 space-y-3">
         <div className="flex items-center gap-3 text-sm">
           <Truck className="w-5 h-5 text-primary" />
-          <span>Free shipping on orders over $100</span>
+          <span>Free shipping on orders over ₦100,000</span>
         </div>
         <div className="flex items-center gap-3 text-sm">
           <RotateCcw className="w-5 h-5 text-primary" />
