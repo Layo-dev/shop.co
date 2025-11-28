@@ -18,10 +18,7 @@ const Footer = () => {
       title: "FAQ",
       links: ["Account", "Manage Deliveries", "Orders", "Payments"]
     },
-    {
-      title: "RESOURCES",
-      links: ["Free eBooks", "Development Tutorial", "How to - Blog", "Youtube Playlist"]
-    }
+    
   ];
 
   const paymentMethods = [
