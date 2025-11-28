@@ -14,7 +14,7 @@ const QuickAccessChips = () => {
   ];
 
   return (
-    <section className="pt-8 pb-12 px-4 sm:px-6 lg:px-8 bg-muted/30">
+    <section className="pt-2 pb-6 px-4 sm:px-6 lg:px-8 bg-muted/30">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8">
           <h3 className="text-xl font-semibold mb-2">Quick Access</h3>
