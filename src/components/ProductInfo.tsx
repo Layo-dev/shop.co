@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Star, Heart, Share2, Truck, Shield, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import ColorSelector from "@/components/ColorSelector";
 import SizeSelector from "@/components/SizeSelector";
 import QuantitySelector from "@/components/QuantitySelector";
 import { useCart } from "@/contexts/CartContext";
@@ -26,7 +25,6 @@ interface ProductInfoProps {
 const ProductInfo = ({ product }: ProductInfoProps) => {
   const { addItem } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
-  const [selectedColor, setSelectedColor] = useState(product.colors?.[0]);
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
   
@@ -76,7 +74,6 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
     addItem({
       productId: product.id,
       product: productForCart,
-      selectedColor,
       selectedSize,
       quantity,
     });
@@ -136,18 +133,6 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       {/* Description */}
       {product.description && (
         <p className="text-muted-foreground leading-relaxed">{product.description}</p>
-      )}
-
-      {/* Color Selection */}
-      {product.colors && (
-        <div>
-          <h3 className="font-semibold mb-3">Color: {selectedColor?.name}</h3>
-          <ColorSelector
-            colors={product.colors}
-            selectedColor={selectedColor}
-            onColorSelect={setSelectedColor}
-          />
-        </div>
       )}
 
       {/* Size Selection */}

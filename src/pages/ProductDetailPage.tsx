@@ -78,7 +78,6 @@ const ProductDetailPage = () => {
     originalPrice: product.original_price ? Number(product.original_price) : undefined,
     rating: Number(product.rating),
     images: (product.images && product.images.length > 0) ? product.images : [product.image_url],
-    colors: product.colors || [],
     sizes: product.sizes || [],
     inStock: product.in_stock,
     care: product.care ? (typeof product.care === 'string' ? [product.care] : product.care) : []
