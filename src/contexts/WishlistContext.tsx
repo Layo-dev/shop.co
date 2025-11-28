@@ -81,11 +81,16 @@ export const WishlistProvider = ({ children }: WishlistProviderProps) => {
 
       if (error) throw error;
       setWishlistItems(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching wishlist:', error);
+      const message = error instanceof Error ? error.message : 'Failed to load wishlist items';
+      const isNetwork = error instanceof TypeError && error.message.includes('fetch');
+      
       toast({
-        title: "Error",
-        description: error?.message || "Failed to load wishlist items",
+        title: isNetwork ? "Connection Error" : "Error",
+        description: isNetwork 
+          ? "Unable to connect. Please check your internet connection and try again."
+          : message,
         variant: "destructive",
       });
     } finally {
@@ -134,11 +139,16 @@ export const WishlistProvider = ({ children }: WishlistProviderProps) => {
         title: "Added to wishlist",
         description: "Item has been added to your wishlist",
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error adding to wishlist:', error);
+      const message = error instanceof Error ? error.message : 'Failed to add item to wishlist';
+      const isNetwork = error instanceof TypeError && error.message.includes('fetch');
+      
       toast({
-        title: "Error",
-        description: error?.message || "Failed to add item to wishlist",
+        title: isNetwork ? "Connection Error" : "Error",
+        description: isNetwork 
+          ? "Unable to connect. Please check your internet connection."
+          : message,
         variant: "destructive",
       });
     }
@@ -173,11 +183,16 @@ export const WishlistProvider = ({ children }: WishlistProviderProps) => {
         title: "Removed from wishlist",
         description: "Item has been removed from your wishlist",
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error removing from wishlist:', error);
+      const message = error instanceof Error ? error.message : 'Failed to remove item from wishlist';
+      const isNetwork = error instanceof TypeError && error.message.includes('fetch');
+      
       toast({
-        title: "Error",
-        description: error?.message || "Failed to remove item from wishlist",
+        title: isNetwork ? "Connection Error" : "Error",
+        description: isNetwork 
+          ? "Unable to connect. Please check your internet connection."
+          : message,
         variant: "destructive",
       });
     }

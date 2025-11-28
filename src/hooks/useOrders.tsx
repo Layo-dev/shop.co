@@ -70,11 +70,16 @@ export const useOrders = () => {
 
       if (error) throw error;
       setOrders(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching orders:', error);
+      const message = error instanceof Error ? error.message : 'Failed to load orders';
+      const isNetwork = error instanceof TypeError && error.message.includes('fetch');
+      
       toast({
-        title: "Error",
-        description: error?.message || "Failed to load orders",
+        title: isNetwork ? "Connection Error" : "Error",
+        description: isNetwork 
+          ? "Unable to connect. Please check your internet connection and try again."
+          : message,
         variant: "destructive",
       });
     } finally {
@@ -134,11 +139,16 @@ export const useOrders = () => {
       });
       console.log('createOrder ALL DONE, order:', order);
       return order;
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('createOrder encounter error:', error);
+      const message = error instanceof Error ? error.message : 'Failed to create order';
+      const isNetwork = error instanceof TypeError && error.message.includes('fetch');
+      
       toast({
-        title: "Error",
-        description: "Failed to create order",
+        title: isNetwork ? "Connection Error" : "Error",
+        description: isNetwork 
+          ? "Unable to connect. Please check your internet connection."
+          : message,
         variant: "destructive",
       });
       throw error;
@@ -164,11 +174,16 @@ export const useOrders = () => {
         title: "Order updated",
         description: "Order status has been updated",
       });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error updating order:', error);
+      const message = error instanceof Error ? error.message : 'Failed to update order';
+      const isNetwork = error instanceof TypeError && error.message.includes('fetch');
+      
       toast({
-        title: "Error",
-        description: "Failed to update order",
+        title: isNetwork ? "Connection Error" : "Error",
+        description: isNetwork 
+          ? "Unable to connect. Please check your internet connection."
+          : message,
         variant: "destructive",
       });
     }
@@ -203,11 +218,16 @@ export const useOrders = () => {
         title: "Order cancelled",
         description: "Your order has been cancelled successfully",
       });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error cancelling order:', error);
+      const message = error instanceof Error ? error.message : 'Failed to cancel order';
+      const isNetwork = error instanceof TypeError && error.message.includes('fetch');
+      
       toast({
-        title: "Error",
-        description: "Failed to cancel order",
+        title: isNetwork ? "Connection Error" : "Error",
+        description: isNetwork 
+          ? "Unable to connect. Please check your internet connection."
+          : message,
         variant: "destructive",
       });
     }
@@ -221,11 +241,16 @@ export const useOrders = () => {
       }
 
       return order.order_items;
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error getting order items for reorder:', error);
+      const message = error instanceof Error ? error.message : 'Failed to reorder items';
+      const isNetwork = error instanceof TypeError && error.message.includes('fetch');
+      
       toast({
-        title: "Error",
-        description: "Failed to reorder items",
+        title: isNetwork ? "Connection Error" : "Error",
+        description: isNetwork 
+          ? "Unable to connect. Please check your internet connection."
+          : message,
         variant: "destructive",
       });
       return null;
