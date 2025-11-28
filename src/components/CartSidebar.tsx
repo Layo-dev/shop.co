@@ -367,11 +367,16 @@ const CartSidebar = ({ open, onOpenChange }: CartSidebarProps) => {
                         title: "Order placed successfully!", 
                         description: `Your order #${data.order_id.slice(0, 8)} has been created.` 
                       });
-                    } catch (err) {
+                    } catch (err: unknown) {
                       console.error('Order creation failed:', err);
+                      const message = err instanceof Error ? err.message : 'An unexpected error occurred';
+                      const isNetwork = err instanceof TypeError && err.message.includes('fetch');
+                      
                       toast({ 
-                        title: "Order failed", 
-                        description: "An unexpected error occurred. Please contact support.", 
+                        title: isNetwork ? "Connection Error" : "Order failed", 
+                        description: isNetwork 
+                          ? "Unable to connect. Please check your internet connection and contact support with your payment reference."
+                          : `${message}. Please contact support if you were charged.`, 
                         variant: "destructive" 
                       });
                     }
