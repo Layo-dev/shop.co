@@ -4,6 +4,7 @@ import Newsletter from "@/components/Newsletter";
 import ShopCategoryCard from "@/components/ShopCategoryCard";
 import FeaturedSection from "@/components/FeaturedSection";
 import QuickAccessChips from "@/components/QuickAccessChips";
+import womensFashionImage from "@/assets/Women's Fashion.jpeg";
 
 const ShopPage = () => {
   const mainCategories = [
@@ -19,7 +20,7 @@ const ShopPage = () => {
       id: "womens", 
       title: "WOMEN'S FASHION",
       subtitle: "Dresses, Casual Wear, Professional, Accessories",
-      image: "https://images.unsplash.com/photo-1494790108755-2616c9a93800?w=500&h=600&fit=crop&crop=face",
+      image: womensFashionImage,
       link: "/womens",
       bgGradient: "from-pink-600/20 to-purple-800/20"
     },
