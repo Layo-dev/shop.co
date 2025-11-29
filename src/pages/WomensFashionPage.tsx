@@ -141,14 +141,7 @@ const WomensFashionPage = () => {
                   <Filter className="w-4 h-4" />
                   Filters
                 </Button>
-                
-                <div className="text-sm text-muted-foreground">
-                  {loading ? (
-                    <Skeleton className="h-4 w-32" />
-                  ) : (
-                    `${products.length} products found`
-                  )}
-                </div>
+              
               </div>
 
               <div className="flex items-center gap-2">
