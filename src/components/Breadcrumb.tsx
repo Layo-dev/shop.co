@@ -7,7 +7,7 @@ interface BreadcrumbProps {
 
 const Breadcrumb = ({ category }: BreadcrumbProps) => {
   return (
-    <nav className="flex items-center space-x-2 text-sm text-muted-foreground">
+    <nav className="flex items-center space-x-2 text-sm text-muted-foreground pl-6 pt-4">
       <Link to="/" className="hover:text-foreground transition-colors">
         Home
       </Link>
