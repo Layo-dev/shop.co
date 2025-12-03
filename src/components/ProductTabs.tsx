@@ -1,45 +1,81 @@
-import { Star } from "lucide-react";
+import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useReviews } from "@/hooks/useReviews";
+import { useAuth } from "@/contexts/AuthContext";
+import ReviewList from "@/components/reviews/ReviewList";
+import ReviewForm from "@/components/reviews/ReviewForm";
+import ReviewSummary from "@/components/reviews/ReviewSummary";
+import { useToast } from "@/hooks/use-toast";
 
 interface ProductTabsProps {
   product: {
-    id: number;
+    id: string;
     title: string;
     description?: string;
     material?: string;
     care?: string[];
+    image_url?: string;
   };
 }
 
 const ProductTabs = ({ product }: ProductTabsProps) => {
-  // Mock reviews data
-  const reviews = [
-    {
-      id: 1,
-      userName: "Sarah M.",
-      rating: 5,
-      comment: "Amazing quality and fits perfectly! The material is so soft and comfortable. Highly recommend!",
-      date: "2024-01-15",
-      verified: true
-    },
-    {
-      id: 2,
-      userName: "Mike R.",
-      rating: 4,
-      comment: "Great product overall. Good value for money. The color is exactly as shown in the pictures.",
-      date: "2024-01-10",
-      verified: true
-    },
-    {
-      id: 3,
-      userName: "Emma L.",
-      rating: 5,
-      comment: "Love this! Perfect for everyday wear. The fit is true to size and the quality exceeded my expectations.",
-      date: "2024-01-08",
-      verified: false
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
+  const [sortBy, setSortBy] = useState<'recent' | 'highest' | 'lowest'>('recent');
+  
+  const {
+    reviews,
+    loading,
+    averageRating,
+    totalReviews,
+    canReview,
+    hasReviewed,
+    fetchReviews
+  } = useReviews(product.id);
+
+  const sortedReviews = [...reviews].sort((a, b) => {
+    switch (sortBy) {
+      case 'highest':
+        return b.rating - a.rating;
+      case 'lowest':
+        return a.rating - b.rating;
+      default:
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
     }
-  ];
+  });
+
+  const handleWriteReview = () => {
+    if (!user) {
+      toast({
+        variant: "info",
+        title: "Sign In Required",
+        description: "Please sign in to write a review."
+      });
+      return;
+    }
+    
+    if (hasReviewed) {
+      toast({
+        variant: "info",
+        title: "Already Reviewed",
+        description: "You have already reviewed this product."
+      });
+      return;
+    }
+    
+    if (!canReview) {
+      toast({
+        variant: "info",
+        title: "Purchase Required",
+        description: "You need to purchase and receive this product before leaving a review."
+      });
+      return;
+    }
+    
+    setIsReviewFormOpen(true);
+  };
 
   const faqs = [
     {
@@ -65,7 +101,7 @@ const ProductTabs = ({ product }: ProductTabsProps) => {
       <Tabs defaultValue="details" className="w-full">
         <TabsList className="grid w-full grid-cols-3 glass-button">
           <TabsTrigger value="details">Product Details</TabsTrigger>
-          <TabsTrigger value="reviews">Reviews ({reviews.length})</TabsTrigger>
+          <TabsTrigger value="reviews">Reviews ({totalReviews})</TabsTrigger>
           <TabsTrigger value="faqs">FAQs</TabsTrigger>
         </TabsList>
         
@@ -98,56 +134,29 @@ const ProductTabs = ({ product }: ProductTabsProps) => {
         
         <TabsContent value="reviews" className="mt-6">
           <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Customer Reviews</h3>
-              <select className="glass-card rounded-lg px-3 py-2 text-sm border-0">
-                <option>Most Recent</option>
-                <option>Highest Rated</option>
-                <option>Lowest Rated</option>
-              </select>
+            {/* Review Summary & Actions */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <ReviewSummary averageRating={averageRating} totalReviews={totalReviews} />
+              
+              <div className="flex items-center gap-3">
+                <select 
+                  className="glass-card rounded-lg px-3 py-2 text-sm border-0"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as 'recent' | 'highest' | 'lowest')}
+                >
+                  <option value="recent">Most Recent</option>
+                  <option value="highest">Highest Rated</option>
+                  <option value="lowest">Lowest Rated</option>
+                </select>
+                
+                <Button onClick={handleWriteReview} size="sm">
+                  Write a Review
+                </Button>
+              </div>
             </div>
             
-            <div className="space-y-4">
-              {reviews.map((review) => (
-                <div key={review.id} className="glass-card rounded-lg p-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                        <span className="text-primary font-semibold">
-                          {review.userName.charAt(0)}
-                        </span>
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium">{review.userName}</span>
-                          {review.verified && (
-                            <Badge variant="secondary" className="text-xs">
-                              Verified Purchase
-                            </Badge>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="flex items-center">
-                            {[...Array(5)].map((_, i) => (
-                              <Star
-                                key={i}
-                                className={`w-4 h-4 ${
-                                  i < review.rating 
-                                    ? "text-yellow-400 fill-current" 
-                                    : "text-gray-300"
-                                }`}
-                              />
-                            ))}
-                          </div>
-                          <span className="text-sm text-muted-foreground">{review.date}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-muted-foreground">{review.comment}</p>
-                </div>
-              ))}
-            </div>
+            {/* Reviews List */}
+            <ReviewList reviews={sortedReviews} loading={loading} />
           </div>
         </TabsContent>
         
@@ -162,6 +171,25 @@ const ProductTabs = ({ product }: ProductTabsProps) => {
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Review Form Modal */}
+      <ReviewForm
+        productId={product.id}
+        product={{
+          title: product.title,
+          image_url: product.image_url || ""
+        }}
+        isOpen={isReviewFormOpen}
+        onClose={() => setIsReviewFormOpen(false)}
+        onSuccess={() => {
+          fetchReviews();
+          toast({
+            variant: "success",
+            title: "Review Submitted",
+            description: "Thank you for your review!"
+          });
+        }}
+      />
     </div>
   );
 };
