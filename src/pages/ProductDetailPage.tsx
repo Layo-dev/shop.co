@@ -74,13 +74,15 @@ const ProductDetailPage = () => {
   // Enhanced product data
   const enhancedProduct = {
     ...product,
+    id: product.id,
     price: Number(product.price),
     originalPrice: product.original_price ? Number(product.original_price) : undefined,
     rating: Number(product.rating),
     images: (product.images && product.images.length > 0) ? product.images : [product.image_url],
     sizes: product.sizes || [],
     inStock: product.in_stock,
-    care: product.care ? (typeof product.care === 'string' ? [product.care] : product.care) : []
+    care: product.care ? (typeof product.care === 'string' ? [product.care] : product.care) : [],
+    image_url: product.image_url
   };
 
   return (
