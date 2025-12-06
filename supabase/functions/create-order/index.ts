@@ -1,23 +1,27 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.56.0';
+import { z } from 'https://esm.sh/zod@3.23.8';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface OrderItem {
-  product_id: string;
-  quantity: number;
-  price_at_time: number;
-  size?: string;
-  color?: string;
-}
+// Input validation schemas
+const orderItemSchema = z.object({
+  product_id: z.string().uuid('Invalid product ID format'),
+  quantity: z.number().int().positive().max(100, 'Quantity must be between 1-100'),
+  price_at_time: z.number().positive('Price must be positive'),
+  size: z.string().max(50).optional(),
+  color: z.string().max(50).optional(),
+});
 
-interface CreateOrderPayload {
-  address_id: string;
-  total_amount: number;
-  items: OrderItem[];
-}
+const payloadSchema = z.object({
+  address_id: z.string().uuid('Invalid address ID format'),
+  total_amount: z.number().positive('Total amount must be positive').max(10000000, 'Amount exceeds maximum'),
+  items: z.array(orderItemSchema).min(1, 'At least one item required').max(50, 'Maximum 50 items'),
+});
+
+type CreateOrderPayload = z.infer<typeof payloadSchema>;
 
 Deno.serve(async (req) => {
   // Handle CORS preflight requests
@@ -46,25 +50,26 @@ Deno.serve(async (req) => {
     if (authError || !user) {
       console.error('Authentication error:', authError);
       return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
+        JSON.stringify({ error: 'Unauthorized', code: 'AUTH_001' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
     console.log('Creating order for user:', user.id);
 
-    // Parse request body
-    const payload: CreateOrderPayload = await req.json();
-    const { address_id, total_amount, items } = payload;
-
-    // Validate input
-    if (!address_id || !total_amount || !items || items.length === 0) {
-      console.error('Invalid payload:', payload);
+    // Parse and validate request body
+    const rawPayload = await req.json();
+    const parseResult = payloadSchema.safeParse(rawPayload);
+    
+    if (!parseResult.success) {
+      console.error('Validation failed:', parseResult.error.issues);
       return new Response(
-        JSON.stringify({ error: 'Missing required fields: address_id, total_amount, or items' }),
+        JSON.stringify({ error: 'Invalid request data', code: 'VALIDATION_001' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+
+    const { address_id, total_amount, items }: CreateOrderPayload = parseResult.data;
 
     // Verify address belongs to user
     const { data: address, error: addressError } = await supabaseClient
@@ -77,12 +82,12 @@ Deno.serve(async (req) => {
     if (addressError || !address) {
       console.error('Address verification failed:', addressError);
       return new Response(
-        JSON.stringify({ error: 'Invalid address' }),
+        JSON.stringify({ error: 'Invalid address', code: 'ADDRESS_001' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log('Address verified:', address);
+    console.log('Address verified:', address.id);
 
     // Create order
     const { data: order, error: orderError } = await supabaseClient
@@ -108,7 +113,7 @@ Deno.serve(async (req) => {
     if (orderError || !order) {
       console.error('Order creation failed:', orderError);
       return new Response(
-        JSON.stringify({ error: 'Failed to create order', details: orderError?.message }),
+        JSON.stringify({ error: 'Failed to create order', code: 'ORDER_001' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -134,7 +139,7 @@ Deno.serve(async (req) => {
       // Attempt to delete the order if items fail
       await supabaseClient.from('orders').delete().eq('id', order.id);
       return new Response(
-        JSON.stringify({ error: 'Failed to create order items', details: itemsError.message }),
+        JSON.stringify({ error: 'Failed to create order items', code: 'ORDER_002' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -154,9 +159,8 @@ Deno.serve(async (req) => {
     );
   } catch (error: unknown) {
     console.error('Unexpected error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
     return new Response(
-      JSON.stringify({ error: 'Internal server error', details: errorMessage }),
+      JSON.stringify({ error: 'Internal server error', code: 'SERVER_001' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
