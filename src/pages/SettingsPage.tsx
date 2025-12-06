@@ -3,9 +3,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import Breadcrumb from "@/components/Breadcrumb";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -307,9 +311,24 @@ const SettingsPage = () => {
   if (!user) {
     return null;
   }
-  return <div className="min-h-screen bg-background">
-      <main className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto space-y-8">
+  return <div className="min-h-screen bg-background flex flex-col">
+      <Header />
+      <main className="container mx-auto px-4 py-8 flex-1">
+        <div className="max-w-4xl mx-auto space-y-6">
+          <Breadcrumb items={[
+            { label: "Account", href: "/account" },
+            { label: "Settings" }
+          ]} />
+          
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => navigate("/account")}
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Account
+          </Button>
           <Card className="glass-card">
             <CardHeader>
               <CardTitle>Personal Information</CardTitle>
@@ -352,7 +371,7 @@ const SettingsPage = () => {
                         </FormItem>} />
                     <FormField control={profileForm.control} name="gender" render={({
                     field
-                  }) => {}} />
+                  }) => (<></>)} />
                   </div>
                   <div className="flex justify-end gap-2">
                     {!isEditing ? <Button type="button" className="glass-button" onClick={() => setIsEditing(true)}>Edit</Button> : <>
@@ -425,6 +444,7 @@ const SettingsPage = () => {
           </Card>
         </div>
       </main>
+      <Footer />
 
       <Dialog open={addressDialogOpen} onOpenChange={setAddressDialogOpen}>
         <DialogContent>
