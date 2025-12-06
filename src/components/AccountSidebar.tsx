@@ -25,8 +25,8 @@ const AccountSidebar = ({ open, onOpenChange }: AccountSidebarProps) => {
   const accountMenuItems = [
     { icon: Package, label: "My Orders", count: ordersCount, href: "/account/orders" },
     { icon: Heart, label: "Wishlist", count: wishlistCount, href: "/account/wishlist" },
-    { icon: Gift, label: "Rewards & Offers", href: "/account" },
-    { icon: Settings, label: "Account Settings", href: "/account" },
+    { icon: Gift, label: "Rewards & Offers", href: "/account/rewards" },
+    { icon: Settings, label: "Account Settings", href: "/account/settings" },
   ];
 
   const handleSignOut = async () => {
