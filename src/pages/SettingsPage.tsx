@@ -17,7 +17,6 @@ import { Label } from "@/components/ui/label";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 type Address = {
   id: string;
   user_id: string;
@@ -31,8 +30,7 @@ type Address = {
 const profileSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
   email: z.string().email(),
-  phone: z.string().optional(),
-  gender: z.enum(["male", "female", "other"]).optional()
+  phone: z.string().optional()
 });
 type ProfileFormValues = z.infer<typeof profileSchema>;
 const addressSchema = z.object({
@@ -63,16 +61,14 @@ const SettingsPage = () => {
   const [lastProfile, setLastProfile] = useState<ProfileFormValues>({
     fullName: "",
     email: "",
-    phone: "",
-    gender: undefined
+    phone: ""
   });
   const profileForm = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
       fullName: "",
       email: "",
-      phone: "",
-      gender: undefined
+      phone: ""
     },
     mode: "onSubmit"
   });
@@ -106,8 +102,7 @@ const SettingsPage = () => {
         const loaded: ProfileFormValues = {
           fullName: [data?.first_name, data?.last_name].filter(Boolean).join(" "),
           email: user.email || "",
-          phone: data?.phone || "",
-          gender: undefined
+          phone: data?.phone || ""
         };
         profileForm.reset(loaded);
         setLastProfile(loaded);
@@ -133,13 +128,13 @@ const SettingsPage = () => {
     } = await (supabase as any).from("profiles").update({
       first_name: firstName || null,
       last_name: lastName || null,
-      phone: values.phone || null,
-      gender: values.gender || null
+      phone: values.phone || null
     }).eq("user_id", user.id);
     if (error) {
+      console.error("Profile update error:", error);
       toast({
         title: "Failed to save",
-        description: "Could not update profile.",
+        description: error.message || "Could not update profile.",
         variant: "destructive"
       });
     } else {
@@ -149,16 +144,14 @@ const SettingsPage = () => {
           data: {
             first_name: firstName || "",
             last_name: lastName || "",
-            phone: values.phone || "",
-            gender: values.gender || ""
+            phone: values.phone || ""
           }
         });
       } catch (_) {/* ignore */}
       const saved: ProfileFormValues = {
         fullName: values.fullName,
         email: values.email,
-        phone: values.phone,
-        gender: values.gender
+        phone: values.phone
       };
       setLastProfile(saved);
       toast({
@@ -369,9 +362,6 @@ const SettingsPage = () => {
                           </FormControl>
                           <FormMessage />
                         </FormItem>} />
-                    <FormField control={profileForm.control} name="gender" render={({
-                    field
-                  }) => (<></>)} />
                   </div>
                   <div className="flex justify-end gap-2">
                     {!isEditing ? <Button type="button" className="glass-button" onClick={() => setIsEditing(true)}>Edit</Button> : <>
