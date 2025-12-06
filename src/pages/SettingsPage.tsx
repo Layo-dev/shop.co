@@ -352,26 +352,7 @@ const SettingsPage = () => {
                         </FormItem>} />
                     <FormField control={profileForm.control} name="gender" render={({
                     field
-                  }) => <FormItem>
-                          <FormLabel>Gender (optional)</FormLabel>
-                          <FormControl>
-                            <RadioGroup value={field.value ?? ""} onValueChange={field.onChange} className="flex gap-6">
-                              <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="male" id="male" disabled={!isEditing} />
-                                <label htmlFor="male">Male</label>
-                              </div>
-                              <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="female" id="female" disabled={!isEditing} />
-                                <label htmlFor="female">Female</label>
-                              </div>
-                              <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="other" id="other" disabled={!isEditing} />
-                                <label htmlFor="other">Other</label>
-                              </div>
-                            </RadioGroup>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>} />
+                  }) => {}} />
                   </div>
                   <div className="flex justify-end gap-2">
                     {!isEditing ? <Button type="button" className="glass-button" onClick={() => setIsEditing(true)}>Edit</Button> : <>
