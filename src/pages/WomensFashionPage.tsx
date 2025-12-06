@@ -105,7 +105,7 @@ const WomensFashionPage = () => {
       
       <main>
         {/* Breadcrumb */}
-        <Breadcrumb category="Women's Fashion" className="my-[20px]" />
+        <Breadcrumb category="Women's Fashion" className="my-[20px] px-[16px]" />
 
         {/* Hero Section */}
         <section className="hero-gradient py-16 px-4 sm:px-6 lg:px-8">
