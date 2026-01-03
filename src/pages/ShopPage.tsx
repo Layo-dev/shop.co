@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import Header from "@/components/TopNav";
 import Footer from "@/components/Footer";
 import Newsletter from "@/components/Newsletter";
 import ShopCategoryCard from "@/components/ShopCategoryCard";

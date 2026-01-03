@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import Header from "@/components/TopNav";
 import Hero from "@/components/Hero";
 import BrandLogos from "@/components/BrandLogos";
 import NewArrivals from "@/components/NewArrivals";

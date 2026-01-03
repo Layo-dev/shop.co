@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import Header from "@/components/Header";
+import Header from "@/components/TopNav";
 import Footer from "@/components/Footer";
 import Newsletter from "@/components/Newsletter";
 import Breadcrumb from "@/components/Breadcrumb";

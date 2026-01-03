@@ -1,4 +1,4 @@
-import Header from '@/components/Header';
+import Header from '@/components/TopNav';
 import Footer from '@/components/Footer';
 import { useAdminOrders } from '@/hooks/useAdminOrders';
 import { OrdersTable } from '@/components/admin/OrdersTable';

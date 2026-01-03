@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import Header from "@/components/Header";
+import Header from "@/components/TopNav";
 import Footer from "@/components/Footer";
 import Newsletter from "@/components/Newsletter";
 import Breadcrumb from "@/components/Breadcrumb";

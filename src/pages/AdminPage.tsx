@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import Header from '@/components/Header';
+import Header from '@/components/TopNav';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Package, Settings, Users, BarChart, ShoppingBag } from 'lucide-react';

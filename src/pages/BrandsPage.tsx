@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import Header from "@/components/TopNav";
 import Footer from "@/components/Footer";
 import Newsletter from "@/components/Newsletter";
 import BrandSpotlight from "@/components/BrandSpotlight";
@@ -23,7 +23,6 @@ const BrandsPage = () => {
           <div className="space-y-6">
             <AnimatedSection animation="fade-in" delay={0}>
               <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium animate-bounce-gentle">
-                <Sparkles className="w-4 h-4" />
                 Premium Brand Collection
               </div>
             </AnimatedSection>
