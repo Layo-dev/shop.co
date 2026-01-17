@@ -1,3 +1,5 @@
+import LogoLoop, { LogoItem } from "@/components/LogoLoop";
+
 const BrandLogos = () => {
   const brands = [{
     name: "VERSACE",
@@ -15,14 +17,32 @@ const BrandLogos = () => {
     name: "Calvin Klein",
     style: "font-light text-lg tracking-wide"
   }];
-  return <section className="bg-primary text-primary-foreground py-[14px]">
+
+  // Convert brands to LogoItem format for LogoLoop
+  const logoItems: LogoItem[] = brands.map(brand => ({
+    node: (
+      <span className={`${brand.style} opacity-70 hover:opacity-100 transition-opacity cursor-pointer`}>
+        {brand.name}
+      </span>
+    )
+  }));
+
+  return (
+    <section className="bg-primary text-primary-foreground py-[14px]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 items-center justify-items-center">
-          {brands.map((brand, index) => <div key={index} className="opacity-70 hover:opacity-100 transition-opacity cursor-pointer">
-              <span className={brand.style}>{brand.name}</span>
-            </div>)}
-        </div>
+        <LogoLoop
+          logos={logoItems}
+          speed={100}
+          direction="left"
+          logoHeight={28}
+          gap={64}
+          pauseOnHover={true}
+          className="w-full"
+          ariaLabel="Brand logos"
+        />
       </div>
-    </section>;
+    </section>
+  );
 };
+
 export default BrandLogos;
