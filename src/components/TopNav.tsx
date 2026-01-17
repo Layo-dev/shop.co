@@ -87,7 +87,7 @@ const Header = () => {
               className="relative"
               onClick={() => setCartOpen(true)}
             >
-              <ShoppingCart alt="Cart" className="w-4 h-4"/>
+              <ShoppingCart className="w-4 h-4"/>
               {state.totalItems > 0 && (
                 <Badge 
                   variant="destructive" 
