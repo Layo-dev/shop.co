@@ -49,9 +49,7 @@ const FeaturedSection = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <Sparkles className="w-6 h-6 text-primary" />
               <h2 className="text-3xl md:text-4xl font-bold">FEATURED PRODUCTS</h2>
-              <Sparkles className="w-6 h-6 text-primary" />
             </div>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               Discover our most popular and trending items, handpicked just for you
