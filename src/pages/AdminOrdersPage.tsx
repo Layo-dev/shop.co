@@ -1,5 +1,6 @@
 import Header from '@/components/TopNav';
 import Footer from '@/components/Footer';
+import {Link} from 'react-router-dom';
 import { useAdminOrders } from '@/hooks/useAdminOrders';
 import { OrdersTable } from '@/components/admin/OrdersTable';
 import { OrderFilters } from '@/components/admin/OrderFilters';
@@ -8,7 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Filter } from 'lucide-react';
+import { Filter, ArrowLeft } from 'lucide-react';
 
 const AdminOrdersPage = () => {
   const isMobile = useIsMobile();
@@ -43,7 +44,12 @@ const AdminOrdersPage = () => {
       <Header />
       <main className="flex-1 py-4 sm:py-6 lg:py-8 px-4 sm:px-6 lg:px-8 w-full max-w-full">
         <div className="max-w-7xl mx-auto w-full">
-          <div className="mb-6 sm:mb-8">
+          <div className="mb-6 sm:mb-8 flex items-center gap-4">
+            <Link to="/admin">
+              <Button variant="ghost" size="icon">
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+            </Link>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">Orders Management</h1>
             <p className="text-muted-foreground text-sm sm:text-base">View and manage all customer orders</p>
           </div>
